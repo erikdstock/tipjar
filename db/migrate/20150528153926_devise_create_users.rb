@@ -3,6 +3,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
     create_table(:users) do |t|
       t.string  :email
       t.string  :display_name
+      t.string  :password
 
       ## Rememberable
       t.datetime :remember_created_at
