@@ -1,4 +1,3 @@
-devise_notes.md
 ===============================================================================
 
 Some setup you must do manually if you haven't yet:
@@ -34,3 +33,61 @@ Some setup you must do manually if you haven't yet:
        rails g devise:views
 
 ===============================================================================
+
+
+#Lastfm Omniauth response object 
+`{
+   "provider": "lastfm",
+   "uid": "ripuk",
+   "info": {
+      "nickname": "ripuk",
+      "name": "David Stephens",
+      "url": "http://www.last.fm/user/ripuk",
+      "image": "http://userserve-ak.last.fm/serve/252/46787679.jpg",
+      "country": "UK",
+      "age": "31",
+      "gender": "m"
+   },
+   "credentials": {
+      "token": "abcdefghijklmnop",
+      "name": "ripuk"
+   },
+   "extra": {
+      "raw_info": {
+         "name": "ripuk",
+         "realname": "David Stephens",
+         "image": [
+            {
+               "#text": "http://userserve-ak.last.fm/serve/34/46787679.jpg",
+               "size": "small"
+            },
+            {
+               "#text": "http://userserve-ak.last.fm/serve/64/46787679.jpg",
+               "size": "medium"
+            },
+            {
+               "#text": "http://userserve-ak.last.fm/serve/126/46787679.jpg",
+               "size": "large"
+            },
+            {
+               "#text": "http://userserve-ak.last.fm/serve/252/46787679.jpg",
+               "size": "extralarge"
+            }
+         ],
+         "url": "http://www.last.fm/user/ripuk",
+         "id": "25400308",
+         "country": "UK",
+         "age": "31",
+         "gender": "m",
+         "subscriber": "0",
+         "playcount": "11530",
+         "playlists": "0",
+         "bootstrap": "0",
+         "registered": {
+            "#text": "2009-12-30 00:53",
+            "unixtime": "1262134389"
+         },
+         "type": "user"
+      }
+   }
+}`

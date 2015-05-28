@@ -17,8 +17,10 @@ ActiveRecord::Schema.define(version: 20150528153926) do
   enable_extension "plpgsql"
 
   create_table "users", force: :cascade do |t|
+    t.string   "password"
     t.string   "email"
-    t.string   "display_name"
+    t.string   "name"
+    t.string   "image"
     t.datetime "remember_created_at"
     t.integer  "sign_in_count",       default: 0, null: false
     t.datetime "current_sign_in_at"
