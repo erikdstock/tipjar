@@ -7,6 +7,9 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div id='oauth'>
+  <%= link_to "Sign in with last.fm", user_omniauth_authorize_path(:lastfm) %>
+</div>
 <div id="flash_messages">
   <% flash.each do |key, value| %>
     <%= content_tag(:div, value, :class => "flash #{key}") %>

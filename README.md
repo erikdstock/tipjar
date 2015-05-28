@@ -11,7 +11,5 @@ This is a side project I'm working on designed to track a user's last.fm listeni
 * Figure out how to actually allow secure donations.
 
 
-
-
 ## Notes
 Like I said, I'm working on this in my free time after graduating from Dev Bootcamp. It may fall by the wayside as my other projects come and go.
