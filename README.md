@@ -13,3 +13,8 @@ This is a side project I'm working on designed to track a user's last.fm listeni
 
 ## Notes
 Like I said, I'm working on this in my free time after graduating from Dev Bootcamp. It may fall by the wayside as my other projects come and go.
+
+## Resources
+* [omniauth wiki](https://github.com/intridea/omniauth/wiki)
+* [omniauth setup example](https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview)
+* [devise flash messages](http://stackoverflow.com/questions/6010407/devise-custom-flash-message)
