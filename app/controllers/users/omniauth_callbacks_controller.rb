@@ -5,7 +5,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 		@user = User.from_omniauth(auth_hash)
 
 		if @user.persisted?
-			sign_in_and_redirect @user#, event: :authentication #used for Warden Callbacks w/ devise
+			sign_in_and_redirect(@user) #, event: :authentication #used for Warden Callbacks w/ devise
 			set_flash_message(:notice, :success, :kind => "lastfm") if is_navigational_format?
 		else
 			session["devise.lastfm_data"]= auth_hash
