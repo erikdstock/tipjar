@@ -18,7 +18,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.inet     :last_sign_in_ip
 
       ## Omniauthable
-      t.string :uid 
+      t.string :uid
       t.string :provider
 
       ## Database authenticatable
