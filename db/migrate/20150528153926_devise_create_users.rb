@@ -6,7 +6,6 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.string  :name
       t.string  :image
 
-
       ## Rememberable
       t.datetime :remember_created_at
 
