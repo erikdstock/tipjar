@@ -36,6 +36,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
 
+gem 'lastfm', '~> 1.27', '>= 1.27.1'
+
 group :development, :test do
   # standard things i added - check what i need
   gem 'factory_girl_rails'
