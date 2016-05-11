@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     # namespace :v1 do
       resources :users
+      get 'top-artists', to: 'users#top_artists', as: :api_top_artists
+      get 'recent-tracks', to: 'users#recent_tracks', as: :api_recent_tracks
     # end
   end
 

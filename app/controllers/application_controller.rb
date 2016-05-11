@@ -6,5 +6,5 @@ class ApplicationController < ActionController::Base
   def auth_hash
     request.env['omniauth.auth']
   end
-  
+
 end

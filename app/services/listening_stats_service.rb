@@ -1,3 +1,4 @@
+require_relative 'apis/base_api'
 require_relative 'apis/lastfm_api'
 
 module ListeningStatsService
@@ -14,9 +15,8 @@ module ListeningStatsService
 
   private
 
-  def service(service_class = LastFmApi)
+  def service(service_class = LastfmApi)
     @service ||= service_class.new
   end
-
 
 end

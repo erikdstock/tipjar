@@ -1,6 +1,6 @@
-require_relative 'base'
+
 module ListeningStatsService
-  class LastFmApi < BaseApi
+  class LastfmApi < BaseApi
     attr_reader :api
 
     def initialize
@@ -29,5 +29,4 @@ module ListeningStatsService
       Rails.application.secrets.lastfm_secret
     end
   end
-
 end
