@@ -1,9 +1,10 @@
+require_relative '../services/listening_stats_service'
 class User < ActiveRecord::Base
+  include ListeningStatsService
   # Include default devise modules. Others available are:
   # devise :rememberable, :trackable, :validatable,
   # :confirmable, :lockable, :database_authenticatable, :registerable,
   # :recoverable,  :timeoutable and :omniauthable
-
   devise :omniauthable, omniauth_providers: [:lastfm]
 
   def self.from_omniauth(auth)
@@ -15,4 +16,10 @@ class User < ActiveRecord::Base
       user.image     = auth.info.image # assuming the user model has an image
     end
   end
+
+
+  # def recent_artists(period: :month, json: true)
+  #   artists = get_recent_artists(period)
+  # end
+
 end
