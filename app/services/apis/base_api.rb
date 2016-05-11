@@ -1,5 +1,3 @@
-puts 'loading base...'
-
 module ListeningStatsService
   class BaseApi
     def get_recent_tracks(*args)
