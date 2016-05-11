@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+ruby '2.0.0'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
 # Use postgresql as the database for Active Record
@@ -37,6 +37,8 @@ gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
 
 gem 'lastfm', '~> 1.27', '>= 1.27.1'
+
+gem "codeclimate-test-reporter", group: :test, require: nil
 
 group :development, :test do
   # standard things i added - check what i need
