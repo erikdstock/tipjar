@@ -5,7 +5,9 @@ module ListeningStatsService
 
     def initialize
       # We might not need/want this gem. (lastfm-ruby)
-      # it's poorly documented and hard to specify [guess] request params
+      # it's poorly documented
+      # and hard to specify [guess] request params
+      # maybe just use httpparty or rest-client
       @api = Lastfm.new(lastfm_id, lastfm_secret)
     end
 
