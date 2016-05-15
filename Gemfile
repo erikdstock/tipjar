@@ -38,7 +38,7 @@ gem 'omniauth-lastfm', '~> 0.0.6'
 
 gem 'lastfm', '~> 1.27', '>= 1.27.1'
 
-gem "codeclimate-test-reporter", group: :test, require: nil
+gem 'codeclimate-test-reporter', group: :test, require: nil
 
 group :development, :test do
   # standard things i added - check what i need
@@ -49,6 +49,7 @@ group :development, :test do
   gem 'capybara'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
+  gem 'webmock'
 
   gem 'byebug'
 

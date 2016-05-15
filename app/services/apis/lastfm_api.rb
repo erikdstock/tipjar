@@ -1,4 +1,3 @@
-
 module ListeningStatsService
   class LastfmApi < BaseApi
     attr_reader :api
