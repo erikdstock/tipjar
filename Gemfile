@@ -39,19 +39,19 @@ gem 'omniauth-lastfm', '~> 0.0.6'
 gem 'lastfm', '~> 1.27', '>= 1.27.1'
 
 gem 'codeclimate-test-reporter', group: :test, require: nil
+gem 'webmock', group: :test
 
 group :development, :test do
   # standard things i added - check what i need
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', "~> 4.0"
   gem 'faker'
   gem 'jasmine-rails'
   gem 'database_cleaner'
   gem 'capybara'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
-  gem 'webmock'
-
   gem 'byebug'
+  gem 'awesome_print'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'

@@ -1,1 +1,9 @@
 This is the show page for user <%= @user.uid %>.
+<table>
+  <% @stats.each do |track| %>
+    <tr>
+      <td><%=track['artist']['content'] %></td>
+      <td><%=track['name'] %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,6 +1,5 @@
-require_relative '../services/listening_stats_service'
 class User < ActiveRecord::Base
-  include ListeningStatsService
+  include ListeningStats
   # Include default devise modules. Others available are:
   # devise :rememberable, :trackable, :validatable,
   # :confirmable, :lockable, :database_authenticatable, :registerable,

@@ -8,11 +8,13 @@ Rails.application.routes.draw do
     get 'sign_out', to: 'devise/sessions#destroy', as: :destroy_user_session
   end
 
+  resources :users
+
   namespace :api, defaults: { format: :json } do
     # namespace :v1 do
-      resources :users
-      get 'top-artists', to: 'users#top_artists', as: :api_top_artists
-      get 'recent-tracks', to: 'users#recent_tracks', as: :api_recent_tracks
+      # resources :users
+      get 'top-artists', to: 'users#top_artists', as: :top_artists
+      get 'recent-tracks', to: 'users#recent_tracks', as: :recent_tracks
     # end
   end
 
