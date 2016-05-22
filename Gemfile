@@ -11,9 +11,9 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
-gem 'lastfm', '~> 1.27', '>= 1.27.1'
 gem 'codeclimate-test-reporter', group: :test, require: nil
 gem 'webmock', group: :test
+gem 'rest-client'
 
 group :development, :test do
   gem 'factory_girl_rails', "~> 4.0"

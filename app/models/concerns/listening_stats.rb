@@ -1,11 +1,11 @@
 module ListeningStats
   # Interface
-  def get_recent_tracks(user = self, *args)
-    service.get_recent_tracks(user)
+  def get_recent_tracks(args = {})
+    service.get_recent_tracks(self, args)
   end
 
-  def get_top_artists(user = self, *args)
-    service.get_top_artists(user)
+  def get_top_artists(args = {})
+    service.get_top_artists(self, args)
   end
 
   private

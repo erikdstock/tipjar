@@ -1,20 +1,29 @@
 class LastfmApi < BaseApi
-  attr_reader :api
+  attr_reader :base, :default_params
 
   def initialize
-    # We might not need/want this gem. (lastfm-ruby)
-    # it's poorly documented
-    # and hard to specify [guess] request params
-    # maybe just use httpparty or rest-client
-    @api = Lastfm.new(lastfm_id, lastfm_secret)
+    @base = "http://ws.audioscrobbler.com/2.0/"
   end
 
-  def get_recent_tracks(user, args = {})
-    api.user.get_recent_tracks(user.name)
+  def get_recent_tracks(user, args={})
+    defaults = {
+      user: user.name,
+      api_key: lastfm_id,
+      method: 'user.getrecenttracks',
+      period: '7day',
+      format: 'json'
+    }
+    response = RestClient.get(base, params: defaults.merge(args))
   end
 
   def get_top_artists(user, args = {})
-    api.user.get_top_artists(user.name)
+    defaults = {
+      user: user.name,
+      api_key: lastfm_id,
+      method: 'user.gettopartists',
+      format: 'json'
+    }
+    response = RestClient.get(base, params: defaults.merge(args))
   end
 
   private
