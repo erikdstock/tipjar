@@ -7,7 +7,7 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-<%= render (@user ? 'shared/oauth' : 'shared/user_controls') %>
+<%= render (@user ? 'shared/user_controls' : 'shared/oauth') %>
 
 <div id="flash_messages">
   <% flash.each do |key, value| %>

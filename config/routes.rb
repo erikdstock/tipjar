@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  root 'welcome#index'
   # http://localhost:3000/users/auth/lastfm/callback
+  root 'welcome#index'
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
 
   devise_scope :user do
