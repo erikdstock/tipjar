@@ -261,8 +261,5 @@ DEPENDENCIES
   web-console (~> 2.0)
   webmock
 
-RUBY VERSION
-   ruby 2.0.0p648
-
 BUNDLED WITH
    1.12.3
