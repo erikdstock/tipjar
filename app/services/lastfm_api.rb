@@ -10,7 +10,7 @@ class LastfmApi < BaseApi
       user: user.name,
       api_key: lastfm_id,
       method: 'user.getrecenttracks',
-      period: '7day',
+      period: '1month',
       format: 'json'
     }
     response = RestClient.get(base, params: defaults.merge(args))
@@ -21,9 +21,12 @@ class LastfmApi < BaseApi
       user: user.name,
       api_key: lastfm_id,
       method: 'user.gettopartists',
-      format: 'json'
+      format: 'json',
+      # from: 123456,
+      # to: 1234567
     }
     response = RestClient.get(base, params: defaults.merge(args))
+    return JSON.parse(response)
   end
 
   private
