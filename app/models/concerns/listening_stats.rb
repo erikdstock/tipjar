@@ -7,6 +7,8 @@ module ListeningStats
   def get_top_artists(args = {})
     response = service.get_top_artists(self, args)
     result = response['topartists']['artist']
+    # Sort artists by tipped, accepting and invitable
+    result
   end
 
   private
