@@ -14,14 +14,14 @@ describe User, type: :model do
       end
     end
 
-    describe 'get_monthly_top_artists' do
+    describe '#monthly_top_artists' do
 
       context 'data is complete' do
 
         it 'returns an array of artists' do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
-          expect(user.get_monthly_top_artists(2.months.ago)).to be_a Hash
+          expect(user.monthly_top_artists(2.months.ago)).to be_a Hash
         end
 
         it 'uses existing data if the data was refreshed after the month end' do

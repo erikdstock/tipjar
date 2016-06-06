@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
   # @param {DateTime} time object, only month/year matter
   # @param {Boolean} :force_update: update api whether data is stale or not.
   # @return {Array} collection of up-to-date artists for the month.
-  def get_monthly_top_artists(time, force_update: false)
+  def monthly_top_artists(time, force_update: false)
     # determine month and year
     # unless force_update is true:
     #   get monthly_top_artists for that time (raw sql where clause?)
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
     #     OR last artist was updated in the previous 24 hours TODO stupid feature?
     #     return current monthly top artists
     # else refesh monthly top artists and return
-    current_top_artists = self.monthly_top_artists
+    current_top_artists = @monthly_top_artists
     return current_top_artists
     if current_top_artists.length > 0
     else
