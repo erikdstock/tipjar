@@ -27,7 +27,6 @@ class LastfmApi < BaseApi
       # to: 1234567
     }
     response = RestClient.get(base, params: defaults.merge(args))
-    byebug
     return JSON.parse(response)
   end
 

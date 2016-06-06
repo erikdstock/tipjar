@@ -6,7 +6,7 @@ module WebmockHelper
   # Turn object into json string for easier stubbing
   # Not sure this will work without some janky requiring
   # maybe: module Stub; def get; return {foobar: 'stub'}; end; end
-  # 
+  #
   # def json_stub(file)
   #   require_relative "api_responses/#{file}"
   #   stub = Stub.get
