@@ -1,0 +1,2 @@
+class MonthlyTopArtistsController < ApplicationController
+end

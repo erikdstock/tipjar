@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :monthly_top_artists
+  resources :artists
   # http://localhost:3000/users/auth/lastfm/callback
   root 'welcome#index'
   devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
