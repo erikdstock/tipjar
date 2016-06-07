@@ -18,10 +18,10 @@ describe User, type: :model do
 
       context 'data is complete' do
 
-        it 'returns an array of artists' do
+        it 'returns an AR Relation of artists' do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
-          expect(user.monthly_top_artists(2.months.ago)).to be_a Hash
+          expect(user.monthly_top_artists(2.months.ago)).to be_a ActiveRecord::Relation
         end
 
         it 'uses existing data if the data was refreshed after the month end' do
