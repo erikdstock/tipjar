@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
 
   devise :omniauthable, omniauth_providers: [:lastfm]
 
+  has_many :monthly_top_artists
+  has_many :top_artists, through: :monthly_top_artists, source: :artist
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.password = Devise.friendly_token[0, 20]
@@ -37,18 +40,22 @@ class User < ActiveRecord::Base
     DateTime.new(time.year, time.month, -1, -1, -1).utc
   end
 
+  def top_artist_attributes
+    <<-STRING
+      artists.name,
+      artists.image,
+      month,
+      play_count,
+      user_id,
+      artist_id,
+      monthly_top_artists.updated_at
+    STRING
+  end
+
   def current_top_artist(time_range)
-    MonthlyTopArtist.where(user_id: id, month: time_range).joins(:artist).select(
-      <<-STRING
-        artists.name,
-        artists.image,
-        month,
-        play_count,
-        user_id,
-        artist_id,
-        monthly_top_artists.updated_at
-      STRING
-    )
+    MonthlyTopArtist.where(user_id: id, month: time_range)
+    .joins(:artist)
+    .select(top_artist_attributes)
   end
 
 end
