@@ -1,8 +1,8 @@
 class CreateMonthlyTopArtists < ActiveRecord::Migration
   def change
     create_table :monthly_top_artists do |t|
-      t.integer :artist_id
-      t.integer :user_id
+      t.belongs_to :artist
+      t.belongs_to :user
       t.integer :play_count
       t.datetime :month
 
