@@ -18,10 +18,17 @@ describe User, type: :model do
 
       context 'data is complete' do
 
-        it 'returns an AR Relation of artists' do
+        it 'returns an AR Relation' do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
           expect(user.monthly_top_artists(2.months.ago)).to be_a ActiveRecord::Relation
+        end
+
+        it 'contains monthly_top_artists data plus artist name and image attrs' do
+          user = create(:user)
+          create(:monthly_top_artist, user: user, month: 2.months.ago)
+          result = user.monthly_top_artists(2.months.ago).first
+          expect { result.name && result.image }.not_to raise_error
         end
 
         it 'uses existing data if the data was refreshed after the month end' do
