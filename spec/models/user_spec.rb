@@ -1,23 +1,28 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  describe 'ListeningStats Module' do
 
+  describe 'associations' do
+    it { should have_many :monthly_top_artists }
+    it do
+      should have_many(:top_artists).through(:monthly_top_artists).source(:artist)
+    end
+  end
+
+  describe 'ListeningStats Module' do
     describe '#api_top_artists' do
       it 'returns an Array' do
         user = create :user
-        stub_request(:get, "http://ws.audioscrobbler.com/2.0/?api_key=&format=json&method=user.gettopartists&user=testuser").
-         with(:headers => {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'User-Agent'=>'Ruby'}).
-         to_return(:status => 200, :body => api_stub(:lastfm_top_artists), :headers => {})
+        stub_request(:get, "http://ws.audioscrobbler.com/2.0/?api_key=&format=json&method=user.gettopartists&user=testuser")
+          .with(:headers => {'Accept' => '*/*; q=0.5, application/xml', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})
+          .to_return(:status => 200, :body => api_stub(:lastfm_top_artists), :headers => {})
         result = user.api_top_artists
         expect(result).to be_a(Array)
       end
     end
 
     describe '#monthly_top_artists' do
-
       context 'data is complete' do
-
         it 'returns an AR Relation' do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
@@ -28,7 +33,7 @@ describe User, type: :model do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
           result = user.monthly_top_artists(2.months.ago).first
-          expect { result.name && result.image }.not_to raise_error
+          expect { result.artist.name && result.artist.image }.not_to raise_error
         end
 
         it 'uses existing data if the data was refreshed after the month end' do

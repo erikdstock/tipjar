@@ -13,6 +13,7 @@ gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
 gem 'codeclimate-test-reporter', group: :test, require: nil
 gem 'webmock', group: :test
+gem 'web-console', '~> 2.0', group: :development
 gem 'rest-client'
 
 group :development, :test do
@@ -25,6 +26,9 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'byebug'
   gem 'awesome_print'
-  gem 'web-console', '~> 2.0'
   gem 'spring'
+end
+
+group :test do
+  gem 'shoulda-matchers', '~> 3.1'
 end
