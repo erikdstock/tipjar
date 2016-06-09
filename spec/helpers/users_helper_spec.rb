@@ -20,4 +20,10 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
+  describe '#validate_time' do
+    it '' do
+      
+    end
+  end
+
 end

@@ -18,7 +18,6 @@ module UsersHelper
   end
 
   def time_range_month(time)
-    validate_time(time)
     month_start(time)..month_end(time)
   end
 

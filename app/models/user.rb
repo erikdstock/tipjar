@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   end
 
   def monthly_top_artists(time)
+    UsersHelper.validate_time(time)
     time_range = UsersHelper.time_range_month(time)
     artists = current_top_artist(time_range)
     artists if !UsersHelper.month_end(time).future? && !artists.empty?
