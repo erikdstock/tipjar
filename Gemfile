@@ -28,3 +28,7 @@ group :development, :test do
   gem 'awesome_print'
   gem 'spring'
 end
+
+group :test do
+  gem 'shoulda-matchers', '~> 3.1'
+end

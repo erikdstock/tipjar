@@ -1,6 +1,14 @@
 require 'rails_helper'
 
 describe User, type: :model do
+
+  describe 'associations' do
+    it { should have_many :monthly_top_artists }
+    it do
+      should have_many(:top_artists).through(:monthly_top_artists).source(:artist)
+    end
+  end
+
   describe 'ListeningStats Module' do
     describe '#api_top_artists' do
       it 'returns an Array' do
