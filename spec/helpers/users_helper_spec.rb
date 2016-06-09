@@ -20,9 +20,10 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
-  describe '#validate_time' do
-    it '' do
-      
+  describe '#time_range_month' do
+    it 'returns a range' do
+      time = DateTime.new(2017, 3, 9)
+      expect(helper.time_range_month(time)).to be_a Range
     end
   end
 
