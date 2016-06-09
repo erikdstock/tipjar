@@ -27,4 +27,20 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
+  describe '#month_start' do
+    it 'returns a DateTime object with the first day of the month' do
+      time = DateTime.new(2017, 3, 9)
+      expect(helper.month_start(time)).to be_a DateTime
+      expect(helper.month_start(time)).to eq "Wed, 01 Mar 2017 00:00:00.000000000 +0000"
+    end
+  end
+
+  describe '#month_end' do
+    it 'returns a DateTime object with the last day of the month' do
+      time = DateTime.new(2017, 3, 9)
+      expect(helper.month_end(time)).to be_a DateTime
+      expect(helper.month_end(time)).to eq "Fri, 31 Mar 2017 23:59:00.000000000 +0000"
+    end
+  end
+
 end
