@@ -33,7 +33,7 @@ describe User, type: :model do
           user = create(:user)
           create(:monthly_top_artist, user: user, month: 2.months.ago)
           result = user.monthly_top_artists(2.months.ago).first
-          expect { result.name && result.image }.not_to raise_error
+          expect { result.artist.name && result.artist.image }.not_to raise_error
         end
 
         it 'uses existing data if the data was refreshed after the month end' do

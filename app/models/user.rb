@@ -18,16 +18,14 @@ class User < ActiveRecord::Base
   def monthly_top_artists(time)
     UsersHelper.validate_time(time)
     time_range = UsersHelper.time_range_month(time)
-    artists = current_top_artist(time_range)
+    artists = current_top_artists(time_range)
     artists if !UsersHelper.month_end(time).future? && !artists.empty?
   end
 
   private
 
-  def current_top_artist(time_range)
-    MonthlyTopArtist.where(user_id: id, month: time_range)
-    .joins(:artist)
-    .select(UsersHelper.top_artist_attributes)
+  def current_top_artists(time_range)
+    MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
   end
 
 end
