@@ -8,3 +8,4 @@
 users = User.create([{name: "Test User", image: "foo.com/jpg"}])
 artists = Artist.create([{name: "Test Artist", image: "foo.com/band"}])
 monthly_top_artists = MonthlyTopArtist.create([{month: 2.months.ago, user_id: users.first.id, artist_id: artists.first.id}])
+# seeds go here
