@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersHelper, type: :helper do
 
-  describe '#top_artist_attributes' do
+  context '#top_artist_attributes' do
     it "returns a string containing the desired attributes" do
       expect(helper.top_artist_attributes).to be_a String
       expect(helper.top_artist_attributes).to eq(
@@ -12,7 +12,7 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
-  describe '#validate_time' do
+  context '#validate_time' do
     it "raises the proper error if the month begins in the future" do
       time = DateTime.new(2017, 3, 9)
       message = 'month is in the future'
@@ -20,14 +20,14 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
-  describe '#time_range_month' do
+  context '#time_range_month' do
     it 'returns a range' do
       time = DateTime.new(2017, 3, 9)
       expect(helper.time_range_month(time)).to be_a Range
     end
   end
 
-  describe '#month_start' do
+  context '#month_start' do
     it 'returns a DateTime object with the first day of the month' do
       time = DateTime.new(2017, 3, 9)
       expect(helper.month_start(time)).to be_a DateTime
@@ -35,7 +35,7 @@ RSpec.describe UsersHelper, type: :helper do
     end
   end
 
-  describe '#month_end' do
+  context '#month_end' do
     it 'returns a DateTime object with the last day of the month' do
       time = DateTime.new(2017, 3, 9)
       expect(helper.month_end(time)).to be_a DateTime
