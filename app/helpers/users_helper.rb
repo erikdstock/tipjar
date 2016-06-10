@@ -1,5 +1,4 @@
 module UsersHelper
-  extend self
 
   def top_artist_attributes
     [

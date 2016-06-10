@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   include ListeningStats
+  include UsersHelper
 
   devise :omniauthable, omniauth_providers: [:lastfm]
 
@@ -16,10 +17,10 @@ class User < ActiveRecord::Base
   end
 
   def monthly_top_artists(time)
-    UsersHelper.validate_time(time)
-    time_range = UsersHelper.time_range_month(time)
+    validate_time(time)
+    time_range = time_range_month(time)
     artists = current_top_artists(time_range)
-    artists if !UsersHelper.month_end(time).future? && !artists.empty?
+    artists if !month_end(time).future? && !artists.empty?
   end
 
   private
