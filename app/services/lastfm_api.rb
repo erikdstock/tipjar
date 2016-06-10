@@ -26,6 +26,8 @@ class LastfmApi < BaseApi
       # from: 123456,
       # to: 1234567
     }
+    # puts args[:from]
+    # puts args[:to]
     response = RestClient.get(base, params: defaults.merge(args))
     return JSON.parse(response)
   end

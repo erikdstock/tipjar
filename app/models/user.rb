@@ -20,16 +20,19 @@ class User < ActiveRecord::Base
     time_range = UsersHelper.time_range_month(time)
     artists = current_top_artists(time_range)
     # return artists if !UsersHelper.month_end(time).future? && !artists.empty?
-    return artists if artists.all?(&:final?)
-    artists = refresh_monthly_top_artists(time_range)
-    artists
+    return artists if !artists.empty? && artists.all?(&:final?)
+    artists = fresh_monthly_top_artists(time_range)
+    # Kill the old top artists and save/replace these
   end
 
   private
 
-  def refresh_monthly_top_artists(time)
-    raise 'only just begun - finish testing'
-    api_top_artists()
+  # Refresh stale top artists
+  # @param {Range} time range from #monthly_top_artists
+  # @return {Collection} ActiveRecord Collection of [unsaved?] artists or false/raise?
+  def fresh_monthly_top_artists(time_range)
+    # raise 'only just begun - finish testing'
+    return api_top_artists(from: time_range.first.to_i, to: time_range.last.to_i)
   end
 
   def current_top_artists(time_range)

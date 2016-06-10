@@ -26,7 +26,7 @@ module UsersHelper
   end
 
   def month_end(time)
-    DateTime.new(time.year, time.month, -1, -1, -1).utc
+    DateTime.new(time.year, time.month, -1, -1, -1, -1).utc
   end
 
 end
