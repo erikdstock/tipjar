@@ -19,10 +19,18 @@ class User < ActiveRecord::Base
     UsersHelper.validate_time(time)
     time_range = UsersHelper.time_range_month(time)
     artists = current_top_artists(time_range)
-    artists if !UsersHelper.month_end(time).future? && !artists.empty?
+    # return artists if !UsersHelper.month_end(time).future? && !artists.empty?
+    return artists if artists.all?(&:final?)
+    artists = refresh_monthly_top_artists(time_range)
+    artists
   end
 
   private
+
+  def refresh_monthly_top_artists(time)
+    raise 'only just begun - finish testing'
+    api_top_artists()
+  end
 
   def current_top_artists(time_range)
     MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
