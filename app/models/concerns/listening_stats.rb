@@ -9,20 +9,20 @@ module ListeningStats
     raise "missing required args from: and to:" unless from && to
     parsed_artists = args.fetch(:parsed_artists, Hash.new(1))
     page = args.fetch(:page, 1)
-    response = service.get_recent_tracks(self, limit: 200, from: from, to: to)
+    puts "getting page #{page}"
+    response = service.get_recent_tracks(self, limit: 200, from: from, to: to, page: page)
     response = JSON.parse(response)
     result = response['recenttracks']
     parsed_artists = result['track'].reduce(parsed_artists) do |a, track|
-      a[track['artist']] = a[track['artist']] + 1
+      a[track['artist']['#text']] = a[track['artist']['#text']] + 1
       a
     end
-    page = result['@attr']['page'].to_i
     total_pages = result['@attr']['totalPages'].to_i
     puts "Page #{page} of #{total_pages}"
-    return result if page == total_pages
+    return parsed_artists if page == total_pages
     api_recent_tracks(from: from, to: to, parsed_artists: parsed_artists, page: page + 1)
     ## Deal with paging- recursive call + reduce?
-    result
+    parsed_artists.sort_by { |a, number| number }.reverse
   end
 
   def api_top_artists(args = {})
