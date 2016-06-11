@@ -17,12 +17,16 @@ class LastfmApi < BaseApi
     # return JSON.parse(response)
   end
 
+  # Get top artists- takes period as a param
+  # overall | 7day | 1month | 3month | 6month | 12month > overall is api defaults
+  # this might not be good bc always is relative to today.
   def get_top_artists(user, args = {})
     defaults = {
       user: user.name,
       api_key: lastfm_id,
       method: 'user.gettopartists',
       format: 'json',
+      period: '1month',
       # from: 123456,
       # to: 1234567
     }
