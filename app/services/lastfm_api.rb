@@ -6,7 +6,7 @@ class LastfmApi < BaseApi
   end
 
   # Paginates through user.getrecenttracks, reducing tracks to artists with track count.
-  def top_artists_by_period(user, from: nil, to: nil, parsed_artists: Hash.new(1), page: 1)
+  def top_artists_by_period(user, from: nil, to: nil, parsed_artists: nil, page: 1)
     puts "getting page #{page}"
     response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
     parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
@@ -15,10 +15,12 @@ class LastfmApi < BaseApi
     top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
   end
 
-  def reduce_artists_from_tracks!(response, parsed_artists)
+  def reduce_artists_from_tracks!(response, parsed_artists = Hash.new(1))
     data = response['recenttracks']['track']
-    data.reduce(parsed_artists) do |p_a, track|
-      p_a[track['artist']['#text']] = p_a[track['artist']['#text']] + 1
+    data.inject(parsed_artists) do |p_a, track|
+      artist_name = track['artist']['#text']
+      count = p_a[artist_name]
+      count += 1
       p_a
     end
   end
