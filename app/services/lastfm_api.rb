@@ -1,23 +1,52 @@
 class LastfmApi < BaseApi
-  attr_reader :base, :default_params
+  attr_reader :base
 
   def initialize
     @base = "http://ws.audioscrobbler.com/2.0/"
   end
 
+  # Paginates through user.getrecenttracks, reducing tracks to artists with track count.
+  def top_artists_by_period(user, from: nil, to: nil, parsed_artists: Hash.new(1), page: 1)
+    debug "getting page #{page}"
+    response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
+    parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
+    return parsed_artists if done_paging?(page, response)
+    page += 1
+    top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
+  end
+
+  def reduce_artists_from_tracks!(response, parsed_artists)
+    data = response['recenttracks']['track']
+    data.reduce(parsed_artists) do |p_a, track|
+      p_a[track['artist']['#text']] = p_a[track['artist']['#text']] + 1
+      p_a
+    end
+  end
+
+  def done_paging?(page, response)
+    total_pages = response['@attr']['totalPages'].to_i
+    debug "page #{page} of #{total_pages}"
+    page == total_pages
+  end
+
+  # lastfm user.recenttracks method
+  #
   def get_recent_tracks(user, args={})
+    from = args[:from].to_i
+    to = args[:to].to_i
     defaults = {
       user: user.name,
       api_key: lastfm_id,
       method: 'user.getrecenttracks',
-      period: '1month',
-      format: 'json'
+      format: 'json',
+      from: from,
+      to: to
     }
     response = RestClient.get(base, params: defaults.merge(args))
-    # return JSON.parse(response)
+    handle_response(response)
   end
 
-  # Get top artists- takes period as a param
+  # lastfm user.gettopartists method- takes period as a param
   # overall | 7day | 1month | 3month | 6month | 12month > overall is api defaults
   # this might not be good bc always is relative to today.
   def get_top_artists(user, args = {})
@@ -26,32 +55,29 @@ class LastfmApi < BaseApi
       api_key: lastfm_id,
       method: 'user.gettopartists',
       format: 'json',
-      period: '1month',
-      # from: 123456,
-      # to: 1234567
+      period: '1month'
     }
-    # puts args[:from]
-    # puts args[:to]
     response = RestClient.get(base, params: defaults.merge(args))
-    return JSON.parse(response)
+    handle_response(response)
   end
-
-  private
 
   # Handle response. Probably want to easily reach errors, maybe
   # package in meta or error fields since we want to standardize
   # this contract across multiple apis
-  def handle_response(res)
-    if res.status.to_s.match /^4/
+  def handle_response(response)
+    status_code = response.code.to_s
+    if status_code =~ /^4/
       warn 'shits fucked'
       # handle 400-level response
-    elsif res.status.to_s.match /^5/
+    elsif status_code =~ /^5/
       warn 'lastfms fucked'
       # handle 500-level response
     else
-      return JSON.parse(res)
+      return JSON.parse(response)
     end
   end
+
+  private
 
   def lastfm_id
     Rails.application.secrets.lastfm_id

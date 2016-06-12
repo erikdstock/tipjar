@@ -1,15 +1,16 @@
 module ListeningStats
+
+  def fetch_api_top_artists(args = {})
+    from = args.fetch(:from)
+    to = args.fetch(:to)
+    artists = service.top_artists_by_period(self, from: from, to: to)
+    artists.sort_by { |a, number| number }.reverse
+  end
+
   # Get a user's recent tracks. Results are individual tracks and may be paginated if
-  # the list is more than 200.
+  # the list is more than 200. TODO move this to the lastfm_api
   # def api_recent_tracks(from:, to:) > this keyword syntax requires ruby 2.1
   def api_recent_tracks(args = {})
-    p 'calling'
-    from = args[:from]
-    to = args[:to]
-    raise "missing required args from: and to:" unless from && to
-    parsed_artists = args.fetch(:parsed_artists, Hash.new(1))
-    page = args.fetch(:page, 1)
-    puts "getting page #{page}"
     response = service.get_recent_tracks(self, limit: 200, from: from, to: to, page: page)
     response = JSON.parse(response)
     result = response['recenttracks']

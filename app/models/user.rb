@@ -32,7 +32,8 @@ class User < ActiveRecord::Base
   # @return {Collection} ActiveRecord Collection of [unsaved?] artists or false/raise?
   def refresh_monthly_top_artists(time_range)
     # raise 'only just begun - finish testing'
-    return api_recent_tracks(from: time_range.first.to_i, to: time_range.last.to_i)
+    artists = fetch_api_top_artists(from: time_range.first, to: time_range.last)
+    # return api_recent_tracks(from: time_range.first.to_i, to: time_range.last.to_i)
   end
 
   def current_top_artists(time_range)
