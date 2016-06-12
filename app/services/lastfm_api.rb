@@ -7,7 +7,7 @@ class LastfmApi < BaseApi
 
   # Paginates through user.getrecenttracks, reducing tracks to artists with track count.
   def top_artists_by_period(user, from: nil, to: nil, parsed_artists: Hash.new(1), page: 1)
-    debug "getting page #{page}"
+    puts "getting page #{page}"
     response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
     parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
     return parsed_artists if done_paging?(page, response)
@@ -25,7 +25,7 @@ class LastfmApi < BaseApi
 
   def done_paging?(page, response)
     total_pages = response['@attr']['totalPages'].to_i
-    debug "page #{page} of #{total_pages}"
+    puts "page #{page} of #{total_pages}"
     page == total_pages
   end
 

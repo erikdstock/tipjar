@@ -10,14 +10,31 @@ describe User, type: :model do
   end
 
   describe 'ListeningStats Module' do
-    describe '#api_top_artists' do
-      it 'returns an Array' do
-        user = create :user
+    describe '#fetch_top_artists_by_period' do
+      let(:result) do
+        user = build :user
+        time = 2.months.ago
         stub_request(:get, /audioscrobbler.*user.gettopartists/)
           .with(:headers => {'Accept' => '*/*; q=0.5, application/xml', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})
           .to_return(:status => 200, :body => api_stub(:lastfm_top_artists), :headers => {})
-        result = user.api_top_artists
+        user.fetch_top_artists_by_period(
+          from: DateTime.new(time.year, time.month, 1).utc,
+          to: DateTime.new(time.year, time.month, -1, -1, -1).utc
+        )
+      end
+
+      it 'returns an Array' do
         expect(result).to be_a(Array)
+      end
+
+      it 'is an ordered list of data like [{artist}, play_count]' do
+        result.each do |artist_data|
+          artist_hash = artist_data[0]
+          play_count = artist_data[1]
+          expected_keys = %w(name image play_count)
+          expect artist_hash.keys.sort.to equal expected_keys.sort
+          expect play_count.to be_a Fixnum
+        end
       end
     end
 

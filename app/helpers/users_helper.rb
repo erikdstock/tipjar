@@ -29,4 +29,11 @@ module UsersHelper
     DateTime.new(time.year, time.month, -1, -1, -1, -1).utc
   end
 
+  # Time#to_i returns unix time in seconds
+  # DateTime and Date need to be converted to time.
+  # @return {Integer} unix epoch time
+  def unix_time(time)
+    time.to_time.to_i
+  end
+
 end
