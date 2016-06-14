@@ -11,25 +11,34 @@ class LastfmApi < BaseApi
     puts "getting page #{page}"
     response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
     parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
-    return parsed_artists if done_paging?(page, response)
+    return parsed_artists if done_paging?(response, 'recenttracks', page)
     page += 1
     top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
   end
 
   # Restructures artist data with counts
-  def reduce_artists_from_tracks!(response, parsed_artists = Hash.new(1))
+  def reduce_artists_from_tracks!(response, parsed_artists)
+    parsed_artists ||= Hash.new(1)
     data = response['recenttracks']['track']
-    data.each_with_object(parsed_artists) do |p_a, track|
-      artist_name = track['artist']['#text']
-      count = p_a[artist_name]
-      count += 1
-      p_a
+    data.each_with_object(parsed_artists) do |track, p_a|
+      # begin
+        artist_name = track['artist']['#text']
+        count = p_a[artist_name]
+        count += 1
+        p_a
+      # rescue NoMethodError => e
+        # byebug
+      # end
     end
   end
 
-  def done_paging?(page, response)
-    total_pages = response['@attr']['totalPages'].to_i
-    puts "page #{page} of #{total_pages}"
+  def done_paging?(response, method_name, expected_page)
+    byebug
+    meta = response[method_name]['@attr']
+    page = meta['page'].to_i
+    total_pages = meta['totalPages'].to_i
+    # puts "page #{page} of #{total_pages}"
+    raise "expected page #{expected_page}, got #{page}" unless page == expected_page
     page == total_pages
   end
 
