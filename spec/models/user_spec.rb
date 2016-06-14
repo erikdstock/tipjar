@@ -11,29 +11,32 @@ describe User, type: :model do
 
   describe 'ListeningStats Module' do
     describe '#fetch_top_artists_by_period' do
-      let(:result) do
-        user = build :user
-        time = 2.months.ago
-        stub_request(:get, /audioscrobbler.*user.gettopartists/)
-          .with(:headers => {'Accept' => '*/*; q=0.5, application/xml', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})
-          .to_return(:status => 200, :body => api_stub(:lastfm_top_artists), :headers => {})
-        user.fetch_top_artists_by_period(
-          from: DateTime.new(time.year, time.month, 1).utc,
-          to: DateTime.new(time.year, time.month, -1, -1, -1).utc
-        )
-      end
+      context 'using lastFm api' do
+        let(:result) do
+          user = build :user
+          time = 2.months.ago
+          stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=1/)
+            .to_return(:status => 200, :body => ApiStubs.recent_tracks(1), :headers => {})
+          stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=2/)
+            .to_return(:status => 200, :body => ApiStubs.recent_tracks(2), :headers => {})
+          user.fetch_top_artists_by_period(
+            from: DateTime.new(time.year, time.month, 1).utc,
+            to: DateTime.new(time.year, time.month, -1, -1, -1).utc
+          )
+        end
 
-      it 'returns an Array' do
-        expect(result).to be_a(Array)
-      end
+        it 'returns an Array' do
+          expect(result).to be_a(Array)
+        end
 
-      it 'is an ordered list of data like [{artist}, play_count]' do
-        result.each do |artist_data|
-          artist_hash = artist_data[0]
-          play_count = artist_data[1]
-          expected_keys = %w(name image play_count)
-          expect artist_hash.keys.sort.to equal expected_keys.sort
-          expect play_count.to be_a Fixnum
+        it 'returns an ordered list of data like artist data' do
+          result.each do |artist_data|
+            artist_hash = artist_data[0]
+            play_count = artist_data[1]
+            expected_keys = %w(name image play_count)
+            expect artist_hash.keys.sort.to equal expected_keys.sort
+            expect play_count.to be_a Fixnum
+          end
         end
       end
     end

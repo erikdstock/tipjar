@@ -1,15 +1,10 @@
+require_relative 'api_stubs/lastfm_recent_tracks'
+require_relative 'api_stubs/lastfm_top_artists'
 module WebmockHelper
-  def api_stub(file)
-    File.read("spec/support/api_responses/#{file}")
+  def api_stub(stub_name)
+    h = ApiStubs.instance_variable_get("@#{stub_name}")
+    res = h.to_json
+    res
+    # File.read("spec/support/api_stubs/#{file}")
   end
-
-  # Turn object into json string for easier stubbing
-  # Not sure this will work without some janky requiring
-  # maybe: module Stub; def get; return {foobar: 'stub'}; end; end
-  #
-  # def json_stub(file)
-  #   require_relative "api_responses/#{file}"
-  #   stub = Stub.get
-  #   JSON.generate(stub)
-  # end
 end

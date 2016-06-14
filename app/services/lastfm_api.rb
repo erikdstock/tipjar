@@ -1,4 +1,5 @@
 class LastfmApi < BaseApi
+  include TimeHelpers
   attr_reader :base
 
   def initialize
@@ -15,9 +16,10 @@ class LastfmApi < BaseApi
     top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
   end
 
+  # Restructures artist data with counts
   def reduce_artists_from_tracks!(response, parsed_artists = Hash.new(1))
     data = response['recenttracks']['track']
-    data.inject(parsed_artists) do |p_a, track|
+    data.each_with_object(parsed_artists) do |p_a, track|
       artist_name = track['artist']['#text']
       count = p_a[artist_name]
       count += 1
@@ -33,19 +35,22 @@ class LastfmApi < BaseApi
 
   # lastfm user.recenttracks method
   #
-  def get_recent_tracks(user, args={})
-    from = args[:from].to_i
-    to = args[:to].to_i
-    defaults = {
+  def get_recent_tracks(user, args = {})
+    from = unix_time(args[:from])
+    to = unix_time(args[:to])
+    page = args.fetch(:page)
+    limit = args.fetch(:limit)
+    params = {
       user: user.name,
       api_key: lastfm_id,
       method: 'user.getrecenttracks',
       format: 'json',
       from: from,
-      to: to
+      to: to,
+      page: page,
+      limit: limit
     }
-    response = RestClient.get(base, params: defaults.merge(args))
-    handle_response(response)
+    handle_response(RestClient.get(base, params: params))
   end
 
   # lastfm user.gettopartists method- takes period as a param
@@ -63,6 +68,8 @@ class LastfmApi < BaseApi
     handle_response(response)
   end
 
+  private
+
   # Handle response. Probably want to easily reach errors, maybe
   # package in meta or error fields since we want to standardize
   # this contract across multiple apis
@@ -78,8 +85,6 @@ class LastfmApi < BaseApi
       return JSON.parse(response)
     end
   end
-
-  private
 
   def lastfm_id
     Rails.application.secrets.lastfm_id
