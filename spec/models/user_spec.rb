@@ -15,10 +15,11 @@ describe User, type: :model do
         let(:result) do
           user = build :user
           time = 2.months.ago
-          stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=1/)
-            .to_return(:status => 200, :body => ApiStubs.recent_tracks(1), :headers => {})
-          stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=2/)
-            .to_return(:status => 200, :body => ApiStubs.recent_tracks(2), :headers => {})
+          # !!! Webmock
+          # stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=1/)
+          #   .to_return(:status => 200, :body => ApiStubs.recent_tracks(1), :headers => {})
+          # stub_request(:get, /audioscrobbler.*user.getrecenttracks.*page=2/)
+          #   .to_return(:status => 200, :body => ApiStubs.recent_tracks(2), :headers => {})
           user.fetch_top_artists_by_period(
             from: DateTime.new(time.year, time.month, 1).utc,
             to: DateTime.new(time.year, time.month, -1, -1, -1).utc

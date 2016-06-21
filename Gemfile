@@ -12,6 +12,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
 gem 'codeclimate-test-reporter', group: :test, require: nil
+gem 'vcr', group: :test
 gem 'webmock', group: :test
 gem 'web-console', '~> 2.0', group: :development
 gem 'rest-client'
