@@ -33,13 +33,14 @@ class LastfmApi < BaseApi
   end
 
   def done_paging?(response, method_name, expected_page)
-    byebug
+    # byebug
     meta = response[method_name]['@attr']
     page = meta['page'].to_i
     total_pages = meta['totalPages'].to_i
-    # puts "page #{page} of #{total_pages}"
+    puts "total pages to fetch: #{total_pages}" if page == 1
     raise "expected page #{expected_page}, got #{page}" unless page == expected_page
-    page == total_pages
+    # In case total pages is 0 (user has no tracks)
+    page >= total_pages
   end
 
   # lastfm user.recenttracks method
