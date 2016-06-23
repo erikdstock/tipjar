@@ -15,10 +15,10 @@ describe User, type: :model do
         let(:result) do
           user = build :user
           time = 2.months.ago
-          VCR.use_cassette('lastfm_user_getrecenttracks', record: :once, :match_requests_on => [:host, :path]) do
+          VCR.use_cassette('lastfm_fetch_top_artists', record: :once, :match_requests_on => [:host, :path]) do
             user.fetch_top_artists_by_period(
-              from: DateTime.new(time.year, time.month, 1).utc,
-              to: DateTime.new(time.year, time.month, -1, -1, -1).utc
+              from: DateTime.new(2016, 5, 1).utc,
+              to: DateTime.new(2016, 5, -1, -1, -1).utc
             )
           end
         end

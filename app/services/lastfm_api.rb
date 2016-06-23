@@ -46,21 +46,18 @@ class LastfmApi < BaseApi
   # lastfm user.recenttracks method
   #
   def get_recent_tracks(user, args = {})
-    from = unix_time(args[:from])
-    to = unix_time(args[:to])
-    page = args.fetch(:page)
-    limit = args.fetch(:limit)
+    more_params = {}
+    more_params[:from] = unix_time(args[:from]) if args[:from]
+    more_params[:to] = unix_time(args[:to]) if args[:to]
+    more_params[:page] = args.fetch(:page, 1)
+    more_params[:limit] = args.fetch(:limit, 200)
     params = {
       user: user.name,
       api_key: lastfm_id,
       method: 'user.getrecenttracks',
-      format: 'json',
-      from: from,
-      to: to,
-      page: page,
-      limit: limit
+      format: 'json'
     }
-    handle_response(RestClient.get(base, params: params))
+    handle_response(RestClient.get(base, params: params.merge(more_params)))
   end
 
   # lastfm user.gettopartists method- takes period as a param
