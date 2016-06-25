@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include ListeningStats
-  include TimeValidation
+  include TimeHelpers
 
   devise :omniauthable, omniauth_providers: [:lastfm]
 
@@ -16,21 +16,52 @@ class User < ActiveRecord::Base
     end
   end
 
-  def monthly_top_artists(time)
+  def top_artists_for_month(time)
     validate_time_in_past(time)
     time_range = time_range_month(time)
-    artists = current_top_artists(time_range)
-    return artists if !artists.empty? && artists.all?(&:final?)
-    artists = refresh_monthly_top_artists(time_range)
+    current_artists = current_top_artists(time_range)
+    return current_artists if !current_artists.empty? && current_artists.all?(&:final?)
+    new_artists = refresh_monthly_top_artists(time_range)
+    if update_top_artists_for_month(current_artists, new_artists, time_range)
+      return top_artists_for_month(time)
+    else
+      errors = current_artists.filter { |mta| mta.errors.length > 0 }
+      p errors
+      raise "something went wrong."
+    end
   end
 
   private
+
+  # Update existing monthly_top_artists with new data
+  # MVP now- optimize later once we have performance baseline
+  # @param current_artists {ActiveRecord Collection}
+  # @param new_artists {Array} of data to update
+  # @param time_range {Range} Calendar month to update
+  # @return {ActiveRecord Collection} of updated artists
+  def update_monthly_top_artists(current_artists, new_artists, time_range)
+    month = time_range.first
+    errors = []
+    new_artists.each do |new_data|
+      old_data = current_artists.filter { |old| old.name == artist.name }
+      if old_data.length == 1
+        old_artist = old_data.first
+        old_artist.update(new_data.merge(month: month))
+      else
+        artist = Artist.first_or_create(name: new_data[:name], image: new_data[:image])
+        play_count = new_data[:play_count]
+        new_monthly_top_artist = MonthlyTopArtist.new(artist: artist, month: month, play_count: play_count)
+        errors << new_monthly_top_artist unless current_artists << new_monthly_top_artist
+      end
+    end
+    errors.empty? ? current_artists : false
+  end
 
   # Refresh stale top artists
   # @param {Range} time range from #monthly_top_artists
   # @return {Collection} ActiveRecord Collection of [unsaved?] artists or false/raise?
   def refresh_monthly_top_artists(time_range)
-    artists = fetch_api_top_artists(from: time_range.first, to: time_range.last)
+    artists = fetch_top_artists_by_period(from: time_range.first, to: time_range.last)
     # TODO
     # Artists will be a hash, need to save each as an actual MTA
     # if artists can be saved, return artists, else return false

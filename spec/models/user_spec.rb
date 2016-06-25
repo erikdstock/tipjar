@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe User, type: :model do
+  include TimeHelpers
+  let(:old_time) { DateTime.new(2016, 5, 12) }
+  let(:old_time_range) { time_range_month(old_time) }
 
   describe 'associations' do
     it { should have_many :monthly_top_artists }
@@ -14,11 +17,10 @@ describe User, type: :model do
       context 'using lastFm api' do
         let(:result) do
           user = build :user
-          time = 2.months.ago
           VCR.use_cassette('lastfm_fetch_top_artists', record: :once, :match_requests_on => [:host, :path]) do
             user.fetch_top_artists_by_period(
-              from: DateTime.new(2016, 5, 1).utc,
-              to: DateTime.new(2016, 5, -1, -1, -1).utc
+              from: old_time_range.first,
+              to: old_time_range.last.utc
             )
           end
         end
@@ -39,26 +41,24 @@ describe User, type: :model do
       end
     end
 
-    describe '#monthly_top_artists' do
+    describe '#top_artists_for_month' do
       context 'data is complete' do
-        it 'returns an AR Relation' do
+        let(:finalized_result) do
           user = create(:user)
-          create(:monthly_top_artist, user: user, month: 2.months.ago)
-          expect(user.monthly_top_artists(2.months.ago)).to be_a ActiveRecord::Relation
+          create(:monthly_top_artist, user: user, month: old_time)
+          user.top_artists_for_month(old_time)
+        end
+
+        it 'returns an AR Relation' do
+          expect(finalized_result).to be_a ActiveRecord::Relation
         end
 
         it 'contains monthly_top_artists data plus artist name and image attrs' do
-          user = create(:user)
-          create(:monthly_top_artist, user: user, month: 2.months.ago)
-          result = user.monthly_top_artists(2.months.ago).first
-          expect { result.artist.name && result.artist.image }.not_to raise_error
+          result = finalized_result.first
+          expect { result.play_count && result.artist.name && result.artist.image }.not_to raise_error
         end
 
         it 'uses existing data if the data was refreshed after the month end' do
-          skip
-        end
-
-        it 'uses existing data if the data was refreshed in the past 24 hours' do
           skip
         end
 
@@ -73,13 +73,8 @@ describe User, type: :model do
       end
 
       it 'can be overridden to refresh with api data' do
-        skip
+        skip 'Not Implemented'
       end
-
-      it 'merges play count into each artist' do
-        skip
-      end
-
     end
   end
 end
