@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
     validate_time_in_past(time)
     time_range = time_range_month(time)
     current_artists = current_top_artists(time_range)
+    # puts !current_artists.empty?
+    # puts current_artists.all?(&:final?)
     return current_artists if !current_artists.empty? && current_artists.all?(&:final?)
     new_artists = refresh_monthly_top_artists(time_range)
     if update_top_artists_for_month(current_artists, new_artists, time_range)

@@ -42,12 +42,12 @@ describe User, type: :model do
     end
 
     describe '#top_artists_for_month' do
-      context 'data is complete' do
-        let(:finalized_result) do
-          user = create(:user)
-          create(:monthly_top_artist, user: user, month: old_time)
-          user.top_artists_for_month(old_time)
-        end
+      let(:user) { create(:user) }
+      let(:finalized_result) do
+        create(:monthly_top_artist, user: user, month: old_time, play_count: 10)
+        user.top_artists_for_month(old_time)
+      end
+      context '- data is complete - no external api call' do
 
         it 'returns an AR Relation' do
           expect(finalized_result).to be_a ActiveRecord::Relation
