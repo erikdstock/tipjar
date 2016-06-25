@@ -27,7 +27,7 @@ describe User, type: :model do
           expect(result).to be_a(Array)
         end
 
-        it 'returns an ordered list of data like artist data' do
+        it 'returns an ordered list of artist data' do
           result.each do |artist_data|
             artist_hash = artist_data[0]
             play_count = artist_data[1]

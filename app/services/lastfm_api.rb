@@ -94,10 +94,10 @@ class LastfmApi < BaseApi
   end
 
   def lastfm_id
-    Rails.application.secrets.lastfm_id
+    Rails.application.secrets.lastfm_id || ENV['lastfm_secret']
   end
 
   def lastfm_secret
-    Rails.application.secrets.lastfm_secret
+    Rails.application.secrets.lastfm_secret || ENV['lastfm_secret']
   end
 end

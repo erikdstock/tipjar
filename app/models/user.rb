@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   include ListeningStats
+  include TimeValidation
 
   devise :omniauthable, omniauth_providers: [:lastfm]
 
@@ -16,10 +17,9 @@ class User < ActiveRecord::Base
   end
 
   def monthly_top_artists(time)
-    UsersHelper.validate_time(time)
-    time_range = UsersHelper.time_range_month(time)
+    validate_time_in_past(time)
+    time_range = time_range_month(time)
     artists = current_top_artists(time_range)
-    # return artists if !UsersHelper.month_end(time).future? && !artists.empty?
     return artists if !artists.empty? && artists.all?(&:final?)
     artists = refresh_monthly_top_artists(time_range)
   end
@@ -39,6 +39,18 @@ class User < ActiveRecord::Base
 
   def current_top_artists(time_range)
     MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
+  end
+
+  def top_artist_attributes
+    [
+      "artists.name",
+      "artists.image",
+      "month",
+      "play_count",
+      "user_id",
+      "artist_id",
+      "monthly_top_artists.updated_at"
+    ].join(", ")
   end
 
 end
