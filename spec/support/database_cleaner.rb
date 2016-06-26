@@ -1,6 +1,6 @@
 require 'capybara/rspec'
 
-puts "#***************"
+puts "******DATABASE CLEANER******"
 RSpec.configure do |config|
 
   config.use_transactional_fixtures = false

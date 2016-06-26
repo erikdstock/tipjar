@@ -16,16 +16,17 @@ class User < ActiveRecord::Base
     end
   end
 
-  def top_artists_for_month(time)
+  def top_artists_for_month(time, refreshed: false)
     validate_time_in_past(time)
     time_range = time_range_month(time)
     current_artists = current_top_artists(time_range)
-    Rails.logger.debug !current_artists.empty?
-    Rails.logger.debug current_artists.all?(&:final?)
+    Rails.logger.debug "current_artists are not empty: #{!current_artists.empty?}"
+    Rails.logger.debug "current_artists are final: #{current_artists.all?(&:final?)}"
+    return current_artists if refreshed
     return current_artists if !current_artists.empty? && current_artists.all?(&:final?)
     new_artists = refresh_monthly_top_artists(time_range)
     if update_top_artists_for_month(current_artists, new_artists, time_range)
-      return top_artists_for_month(time)
+      return top_artists_for_month(time, refreshed: true)
     else
       errors = current_artists.filter { |mta| !mta.errors.empty? }
       Rails.logger.error errors
@@ -41,7 +42,7 @@ class User < ActiveRecord::Base
   # @param new_artists {Array} of data to update
   # @param time_range {Range} Calendar month to update
   # @return {ActiveRecord Collection} of updated artists
-  def update_monthly_top_artists(current_artists, new_artists, time_range)
+  def update_top_artists_for_month(current_artists, new_artists, time_range)
     month = time_range.first
     errors = []
     new_artists.each do |new_data|
