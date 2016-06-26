@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe User, type: :model do
   include TimeHelpers
-  let(:old_time) { DateTime.new(2016, 5, 12) }
+  let(:old_time) { DateTime.new(2016, 5, 12).utc }
   let(:old_time_range) { time_range_month(old_time) }
 
   describe 'associations' do
