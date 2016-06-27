@@ -1,6 +1,5 @@
 require 'rails_helper'
 RSpec.describe LastfmApi do
-
   context "#get_recent_tracks" do
     let(:user) { FactoryGirl.build(:user) }
 

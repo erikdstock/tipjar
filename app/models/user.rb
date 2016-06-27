@@ -22,16 +22,9 @@ class User < ActiveRecord::Base
     current_artists = current_top_artists(time_range)
     Rails.logger.debug "current_artists are not empty: #{!current_artists.empty?}"
     Rails.logger.debug "current_artists are final: #{current_artists.all?(&:final?)}"
-    return current_artists if refreshed
-    return current_artists if !current_artists.empty? && current_artists.all?(&:final?)
-    new_artists = refresh_monthly_top_artists(time_range)
-    if update_top_artists_for_month(current_artists, new_artists, time_range)
-      return top_artists_for_month(time, refreshed: true)
-    else
-      errors = current_artists.filter { |mta| !mta.errors.empty? }
-      Rails.logger.error errors
-      raise "something went wrong."
-    end
+    return current_artists if refreshed || !current_artists.empty? && current_artists.all?(&:final?)
+    return top_artists_for_month(time, refreshed: true) if update_top_artists_for_month!(current_artists, time_range)
+    raise 'Something went wrong on refreshing top artists'
   end
 
   private
@@ -39,25 +32,21 @@ class User < ActiveRecord::Base
   # Update existing monthly_top_artists with new data
   # MVP now- optimize later once we have performance baseline
   # @param current_artists {ActiveRecord Collection}
-  # @param new_artists {Array} of data to update
   # @param time_range {Range} Calendar month to update
   # @return {ActiveRecord Collection} of updated artists
-  def update_top_artists_for_month(current_artists, new_artists, time_range)
+  def update_top_artists_for_month!(current_artists, time_range)
     month = time_range.first
+    fresh_artists = refresh_monthly_top_artists(time_range)
     errors = []
-    new_artists.each do |new_data|
-      old_data = current_artists.filter { |old| old.name == artist.name }
-      if old_data.length == 1
-        old_artist = old_data.first
-        old_artist.update(new_data.merge(month: month))
-      else
-        artist = Artist.first_or_create(name: new_data[:name], image: new_data[:image])
-        play_count = new_data[:play_count]
-        new_monthly_top_artist = MonthlyTopArtist.new(artist: artist, month: month, play_count: play_count)
-        errors << new_monthly_top_artist unless current_artists << new_monthly_top_artist
-      end
+    fresh_artists.each do |new_artist_data|
+      artist = Artist.first_or_initialize(name: new_artist_data[:name])
+      artist.image = new_artist_data[:image]
+      monthly_top_artist = current_artists.first_or_initialize(artist: artist)
+      next if monthly_top_artist.update(play_count: new_artist_data[:play_count], month: month, user: self)
+      errors << monthly_top_artist
+      logger.error "artist failed to save"
     end
-    errors.empty? ? current_artists : false
+    errors.empty?
   end
 
   # Refresh stale top artists
@@ -65,6 +54,7 @@ class User < ActiveRecord::Base
   # @return {Collection} ActiveRecord Collection of [unsaved?] artists or false/raise?
   def refresh_monthly_top_artists(time_range)
     artists = fetch_top_artists_by_period(from: time_range.first, to: time_range.last)
+    artists
     # TODO
     # Artists will be a hash, need to save each as an actual MTA
     # if artists can be saved, return artists, else return false

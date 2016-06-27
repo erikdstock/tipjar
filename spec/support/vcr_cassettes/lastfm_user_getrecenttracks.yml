@@ -21,7 +21,7 @@ http_interactions:
       Server:
       - openresty/1.9.7.3
       Date:
-      - Sun, 26 Jun 2016 14:53:42 GMT
+      - Mon, 27 Jun 2016 03:11:12 GMT
       Content-Type:
       - application/json; charset=UTF-8
       Content-Length:
@@ -3114,5 +3114,5 @@ http_interactions:
         IjoiMSIsInBlclBhZ2UiOiIyMDAiLCJ0b3RhbFBhZ2VzIjoiOTkiLCJ0b3Rh
         bCI6IjE5NjIzIn19fQ==
     http_version: 
-  recorded_at: Sun, 26 Jun 2016 14:53:44 GMT
+  recorded_at: Mon, 27 Jun 2016 03:11:12 GMT
 recorded_with: VCR 3.0.3

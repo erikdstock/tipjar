@@ -11,24 +11,28 @@ class LastfmApi < BaseApi
     Rails.logger.debug "getting page #{page}"
     response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
     parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
-    return parsed_artists if done_paging?(response, 'recenttracks', page)
+    if done_paging?(response, 'recenttracks', page)
+      result = parsed_artists.sort_by { |_name, data| data[:count] }.reverse!
+                             .map { |_name, artist| artist }
+      return result
+    end
     page += 1
     top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
   end
 
-  # Restructures artist data with counts
+  # Restructures artist track_data with counts
   def reduce_artists_from_tracks!(response, parsed_artists)
-    parsed_artists ||= Hash.new(1)
-    data = response['recenttracks']['track']
-    data.each_with_object(parsed_artists) do |track, p_a|
-      # begin
-        artist_name = track['artist']['#text']
-        count = p_a[artist_name]
-        count += 1
-        p_a
-      # rescue NoMethodError => e
-        # byebug
-      # end
+    parsed_artists ||= Hash.new(play_count: 1)
+    track_data = response['recenttracks']['track']
+    result = track_data.each_with_object(parsed_artists) do |track, p_a|
+      artist_name = track['artist']['#text']
+      current_artist_count = p_a[artist_name]
+      count = current_artist_count[:play_count]
+      p_a[artist_name] = {
+        name: artist_name,
+        play_count: count + 1
+      }
+      p_a
     end
   end
 
@@ -37,10 +41,11 @@ class LastfmApi < BaseApi
     meta = response[method_name]['@attr']
     page = meta['page'].to_i
     total_pages = meta['totalPages'].to_i
+    return true if total_pages == 0
     Rails.logger.debug "total pages to fetch: #{total_pages}" if page == 1
     raise "expected page #{expected_page}, got #{page}" unless page == expected_page
-    # In case total pages is 0 (user has no tracks)
-    page >= total_pages
+    raise "expected page #{total_pages} total pages, got page #{page}" if page > total_pages
+    page == total_pages
   end
 
   # lastfm user.recenttracks method

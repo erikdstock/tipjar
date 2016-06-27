@@ -3,8 +3,7 @@ module ListeningStats
   def fetch_top_artists_by_period(args = {})
     from = args.fetch(:from)
     to = args.fetch(:to)
-    artists = service.top_artists_by_period(self, from: from, to: to)
-    artists.sort_by { |a, number| number }.reverse
+    service.top_artists_by_period(self, from: from, to: to)
   end
 
   # Deprecate - use #fetch_api_top_artists
