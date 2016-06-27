@@ -9,12 +9,17 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
+
+gem 'figaro'
 gem 'devise', '~> 3.5.1'
 gem 'omniauth-lastfm', '~> 0.0.6'
-gem 'codeclimate-test-reporter', group: :test, require: nil
-gem 'webmock', group: :test
-gem 'web-console', '~> 2.0', group: :development
 gem 'rest-client'
+
+gem 'web-console', '~> 2.0', group: :development
+
+gem 'codeclimate-test-reporter', group: :test, require: nil
+gem 'vcr', group: :test
+gem 'webmock', group: :test
 
 group :development, :test do
   gem 'factory_girl_rails', "~> 4.0"
@@ -27,4 +32,8 @@ group :development, :test do
   gem 'byebug'
   gem 'awesome_print'
   gem 'spring'
+end
+
+group :test do
+  gem 'shoulda-matchers', '~> 3.1'
 end

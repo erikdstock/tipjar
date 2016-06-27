@@ -1,6 +1,6 @@
 require 'rails_helper'
-RSpec.describe TimeService do
-  include TimeService
+RSpec.describe TimeHelpers do
+  include TimeHelpers
   # describe "#unix_time (private method)" do
   #   it "returns the returns an integer in unix time" do
   #     result = TimeService.send(:to_unix_time,DateTime.new(1970,1,1))
@@ -14,13 +14,7 @@ RSpec.describe TimeService do
     # it 'accepts a date_time parameter' do
     #   skip 'no it doesnt- not implementing this for now'
     # end
-    it 'defaults to use the current year for year param' do
-      skip 'Clarify stub syntax'
-      stub(DateTime.now, DateTime.new(2016,5))
-      expected_month = unix_month(month: 5, year: 2016)
-      expect(unix_month(month: 5)).to equal(expected_month)
-    end
-
+    #
     it 'returns the start and end of the month in unix seconds' do
       result = unix_month(month:1, year: 1970)
       expect(result[1]).to eq 0

@@ -1,59 +1,111 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  describe 'ListeningStats Module' do
-    describe '#api_top_artists' do
-      it 'returns an Array' do
-        user = create :user
-        stub_request(:get, "http://ws.audioscrobbler.com/2.0/?api_key=&format=json&method=user.gettopartists&user=testuser")
-          .with(:headers => {'Accept' => '*/*; q=0.5, application/xml', 'Accept-Encoding' => 'gzip, deflate', 'User-Agent' => 'Ruby'})
-          .to_return(:status => 200, :body => api_stub(:lastfm_top_artists), :headers => {})
-        result = user.api_top_artists
-        expect(result).to be_a(Array)
+  include TimeHelpers
+  let(:old_time) { DateTime.new(2016, 5, 12).utc }
+
+  def expect_valid_monthly_top_artists(monthly_top_artists, expect_empty: false)
+    expect(monthly_top_artists).to be_a ActiveRecord::Relation
+    expect_empty ? (expect(monthly_top_artists.length).to eq(0)) : (expect(monthly_top_artists.length).to be > 0)
+  end
+
+  describe 'associations' do
+    it { should have_many :monthly_top_artists }
+    it do
+      should have_many(:top_artists).through(:monthly_top_artists).source(:artist)
+    end
+  end
+
+  # This is the main entry point for the app to a user's top artist data.
+  # May want to define/test explicit structure with #expect_valid_monthly_top_artists above
+  #
+  describe '#top_artists_for_month' do
+    let(:user) { create(:user) }
+    let(:finalized_result) do
+      create(:monthly_top_artist, user: user, month: old_time, play_count: 10)
+      user.top_artists_for_month(old_time)
+    end
+
+    # If data is complete (month is over & updated after month end) no api
+    # call will be made- VCR/Webmock will block these calls since they are not
+    # wrapped in a VCR.use_casette block
+    context '- data is complete - no external api call' do
+      it 'returns an AR Relation' do
+        expect_valid_monthly_top_artists(finalized_result)
+      end
+
+      it 'contains monthly_top_artists data plus artist name and image attrs' do
+        result = finalized_result.first
+        expect { result.play_count && result.artist.name && result.artist.image }.not_to raise_error
       end
     end
 
-    describe '#monthly_top_artists' do
-      context 'data is complete' do
-        it 'returns an AR Relation' do
-          user = create(:user)
-          create(:monthly_top_artist, user: user, month: 2.months.ago)
-          expect(user.monthly_top_artists(2.months.ago)).to be_a ActiveRecord::Relation
-        end
-
-        it 'contains monthly_top_artists data plus artist name and image attrs' do
-          user = create(:user)
-          create(:monthly_top_artist, user: user, month: 2.months.ago)
-          result = user.monthly_top_artists(2.months.ago).first
-          expect { result.name && result.image }.not_to raise_error
-        end
-
-        it 'uses existing data if the data was refreshed after the month end' do
-          skip
-        end
-
-        it 'uses existing data if the data was refreshed in the past 24 hours' do
-          skip
-        end
-
+    context '- data is unreliable - refreshes with api' do
+      let(:this_month_time) { month_start(DateTime.now.utc) }
+      let(:stale_time) { DateTime.new(2016, 3, 12).utc }
+      let(:this_month_result) do
+        create(:monthly_top_artist, user: user, month: this_month_time, play_count: 10)
+        user.top_artists_for_month(old_time)
+      end
+      let(:stale_result) do
+        create(:monthly_top_artist, user: user, month: old_time, play_count: 10, updated_at: (this_month_time + 1.hour))
+        user.top_artists_for_month(old_time)
       end
 
-      it 'calls the api if data is stale (more than 24 hours old)' do
-        skip
+      it 'calls the api if data is from the current month' do
+        VCR.use_cassette 'lastfm_user_getrecenttracks_this_month' do
+          Rails.logger.warn 'assert that api is actually called? or maybe not necessary at all'
+          Rails.logger.warn 'might want to actually stub timenow for more reliable data'
+          expect_valid_monthly_top_artists(this_month_result)
+        end
+      end
+
+      it 'calls the api if data is the data has not been updated since the month end' do
+        Rails.logger.warn 'assert that api is actually called? or maybe not necessary at all'
+        VCR.use_cassette 'lastfm_user_getrecenttracks_stale' do
+          expect_valid_monthly_top_artists(stale_result)
+        end
+      end
+
+      it 'returns an empty array immediately if the month is in the future' do
+        expect(user.top_artists_for_month(2.months.from_now)).to eq []
       end
 
       it 'calls the api if there is no data for the month' do
         skip
       end
+    end
 
-      it 'can be overridden to refresh with api data' do
-        skip
+    it 'can be overridden to refresh with api data' do
+      skip 'Not Implemented'
+    end
+  end
+
+  describe 'ListeningStats Module' do
+    describe '#fetch_top_artists_by_period' do
+      context 'using lastFm api' do
+        let(:result) do
+          user = build :user
+          old_time_range = time_range_month(old_time)
+          VCR.use_cassette('lastfm_fetch_top_artists', record: :once, :match_requests_on => [:host, :path]) do
+            user.fetch_top_artists_by_period(
+              from: old_time_range.first,
+              to: old_time_range.last.utc
+            )
+          end
+        end
+
+        it 'returns an Array' do
+          expect(result).to be_a(Array)
+        end
+
+        it 'returns an ordered list of artist data' do
+          result.each do |artist_data|
+            expect(artist_data[:name]).to be_a(String)
+            expect(artist_data[:play_count]).to be_a(Fixnum)
+          end
+        end
       end
-
-      it 'merges play count into each artist' do
-        skip
-      end
-
     end
   end
 end
