@@ -1,5 +1,4 @@
 module ListeningStats
-
   def fetch_top_artists_by_period(args = {})
     from = args.fetch(:from)
     to = args.fetch(:to)
