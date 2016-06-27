@@ -24,7 +24,7 @@ class LastfmApi < BaseApi
   def reduce_artists_from_tracks!(response, parsed_artists)
     parsed_artists ||= Hash.new(play_count: 1)
     track_data = response['recenttracks']['track']
-    result = track_data.each_with_object(parsed_artists) do |track, p_a|
+    track_data.each_with_object(parsed_artists) do |track, p_a|
       artist_name = track['artist']['#text']
       current_artist_count = p_a[artist_name]
       count = current_artist_count[:play_count]
@@ -37,7 +37,6 @@ class LastfmApi < BaseApi
   end
 
   def done_paging?(response, method_name, expected_page)
-    # byebug
     meta = response[method_name]['@attr']
     page = meta['page'].to_i
     total_pages = meta['totalPages'].to_i
