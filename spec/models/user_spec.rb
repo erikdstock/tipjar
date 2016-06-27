@@ -67,6 +67,10 @@ describe User, type: :model do
         end
       end
 
+      it 'returns an empty array immediately if the month is in the future' do
+        expect(user.top_artists_for_month(2.months.from_now)).to eq []
+      end
+
       it 'calls the api if there is no data for the month' do
         skip
       end

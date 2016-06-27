@@ -17,7 +17,12 @@ class User < ActiveRecord::Base
   end
 
   def top_artists_for_month(time, refreshed: false)
-    validate_time_in_past(time)
+    begin
+      validate_time_in_past(time)
+    rescue RuntimeError => e
+      logger.debug e.message
+      return []
+    end
     time_range = time_range_month(time)
     current_artists = current_top_artists(time_range)
     Rails.logger.debug "current_artists are not empty: #{!current_artists.empty?}"
