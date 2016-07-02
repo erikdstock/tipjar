@@ -2,11 +2,13 @@ This is the show page for user <%= @user.name %>.
 <%= p Rails.env %>
 <ul class="collection with-header">
   <li class="collection-header"><h4>Top Artists for <%= @month %></h4></li>
-  <% @top_artists.each do |monthly_top_artist| %>
+  <% @top_artists.each do |top_artist| %>
+  <!-- TODO move this to controller or something -->
+    <% next if top_artist.play_count < 5 %>
     <li class="collection-item avatar">
-      <img src="<%= monthly_top_artist.artist.image %>" alt="<%= monthly_top_artist.artist.name %>'s picture'" class="circle">
-      <span class="title"> <%= monthly_top_artist.artist.name %> </span>
-      <p> Plays this month: <%= monthly_top_artist.play_count %> </p>
+      <img src="<%= top_artist.artist.image %>" alt="<%= top_artist.artist.name %>'s picture'" class="circle">
+      <span class="title"> <%= top_artist.artist.name %> </span>
+      <p> Plays this month: <%= top_artist.play_count %> </p>
       <a href="#!" class="secondary-content"><i class="material-icons">stars</i></a>
     </li>
   <% end %>

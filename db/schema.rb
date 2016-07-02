@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20160605044426) do
     t.integer  "artist_id"
     t.integer  "user_id"
     t.integer  "play_count"
+    t.string "image"
     t.datetime "month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

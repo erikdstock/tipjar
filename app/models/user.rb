@@ -44,8 +44,8 @@ class User < ActiveRecord::Base
     month = time_range.first
     errors = []
     fresh_artists = refresh_monthly_top_artists(time_range)
-      .select{ |a| a[:play_count] >= min_plays }
-    fresh_artist_hash = fresh_artists.map{ |artist| [artist[:name], artist] }.to_h
+      # .select{ |a| a[:play_count] >= min_plays } # TODO this is a weird place to filter
+    # fresh_artist_hash = fresh_artists.map{ |artist| [artist[:name], artist] }.to_h
     # current_top_artists.each do |old_mta|
     #   artist = old_mta.artist
     #   new_artist_data = fresh_artist_hash.delete(artist.name)
@@ -54,12 +54,13 @@ class User < ActiveRecord::Base
     #     old_mta.update(play_count: new_artist_data[:play_count])
     #   end
     # end
-    fresh_artists.each do |new_artist_data|
-      artist = Artist.find_or_create_by(name: new_artist_data[:name]) do |a|
-        a.image = new_artist_data[:image]
+    fresh_artists.each do |name, new_artist_data|
+      artist = Artist.find_or_create_by(name: name) do |a|
+        a.image ||= new_artist_data[:image]
       end
       monthly_top_artist = current_top_artists.find_or_create_by(artist: artist, month: month) do |mta|
         mta.play_count = new_artist_data[:play_count]
+        mta.image = new_artist_data[:image]
         mta.user = self
       end
       # byebug
