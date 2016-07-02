@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.password = Devise.friendly_token[0, 20]
-      user.email     = auth.info.email
+      # user.email     = auth.info.email # not in lastfm hash
       user.name      = auth.info.name
       user.image     = auth.info.image
     end
@@ -39,18 +39,36 @@ class User < ActiveRecord::Base
   # @param current_artists {ActiveRecord Collection}
   # @param time_range {Range} Calendar month to update
   # @return {ActiveRecord Collection} of updated artists
-  def update_top_artists_for_month!(current_artists, time_range)
+  def update_top_artists_for_month!(current_top_artists, time_range, min_plays: 5)
+    Rails.logger.debug "updating monthly top artists..."
     month = time_range.first
-    fresh_artists = refresh_monthly_top_artists(time_range)
     errors = []
+    fresh_artists = refresh_monthly_top_artists(time_range)
+      .select{ |a| a[:play_count] >= min_plays }
+    fresh_artist_hash = fresh_artists.map{ |artist| [artist[:name], artist] }.to_h
+    # current_top_artists.each do |old_mta|
+    #   artist = old_mta.artist
+    #   new_artist_data = fresh_artist_hash.delete(artist.name)
+    #   if new_artist_data # How could there not be?
+    #     artist.update(new_artist_data) if artist.image.nil?
+    #     old_mta.update(play_count: new_artist_data[:play_count])
+    #   end
+    # end
     fresh_artists.each do |new_artist_data|
-      artist = Artist.first_or_initialize(name: new_artist_data[:name])
-      artist.image = new_artist_data[:image]
-      monthly_top_artist = current_artists.first_or_initialize(artist: artist)
-      next if monthly_top_artist.update(play_count: new_artist_data[:play_count], month: month, user: self)
+      artist = Artist.find_or_create_by(name: new_artist_data[:name]) do |a|
+        a.image = new_artist_data[:image]
+      end
+      monthly_top_artist = current_top_artists.find_or_create_by(artist: artist, month: month) do |mta|
+        mta.play_count = new_artist_data[:play_count]
+        mta.user = self
+      end
+      # byebug
+      next if artist.persisted? && monthly_top_artist.persisted?
+      # byebug
       errors << monthly_top_artist
       logger.error "artist failed to save"
     end
+    byebug
     errors.empty?
   end
 

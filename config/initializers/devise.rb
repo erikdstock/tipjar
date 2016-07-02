@@ -239,8 +239,8 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   config.omniauth :lastfm,
-                  Rails.application.secrets.lastfm_id,
-                  Rails.application.secrets.lastfm_secret,
+                  ENV['lastfm_id'],
+                  ENV['lastfm_secret']
                   {scope: 'user,public_repo'}
 
   # ==> Warden configuration
