@@ -1,5 +1,4 @@
 language: ruby
-rvm:
 before_script:
   - echo "Before Script:"
   - cp config/secrets.yml.example config/secrets.yml
