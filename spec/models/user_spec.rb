@@ -1,7 +1,7 @@
 require 'rails_helper'
+include TimeTools
 
 describe User, type: :model do
-  include TimeTools
   travel_to Time.new(2016, 6, 2).utc
   let(:old_time) { DateTime.new(2016, 5, 12).utc }
 

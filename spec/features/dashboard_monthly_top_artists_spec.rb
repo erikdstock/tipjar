@@ -6,7 +6,6 @@ RSpec.feature "Dashboard - Monthly Top Artists", type: :feature do
     # Stub time + Omniauth
     travel_to Time.new(2016, 6, 15).utc
     stub_omniauth
-
     # Log in
     visit root_path
     VCR.use_cassette 'lastfm_user_getrecenttracks_dash' do
