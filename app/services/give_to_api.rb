@@ -6,32 +6,36 @@ module GiveToApi # < BaseApi
     req = RestClient::Request.new(method: :get,
                                   url: "#{BASE}/artists",
                                   payload: params)
-    response = JSON.parse(req.execute)
-    if response['artists'].length == 1
-      artist = response['artists'][0]
-      result = {
-        url: artist['url'],
-        image: artist['image'],
-        verified: artist['verified']
-      }
-      return result
-    else
-      return false
-    end
+    handle_response(req.execute)
+
   end
 
   private
 
   def handle_response(response)
+    handle_response_errors(response)
+    json_response = JSON.parse(response)
+    if json_response['errors'].empty? && json_response['artists'].length == 1
+      artist = json_response['artists'][0]
+      return {
+        url: artist['url'],
+        image: artist['image'],
+        verified: artist['verified']
+      }
+    else
+      json_response['errors'].each { |e| warn e }
+      return false
+    end
+  end
+
+  def handle_response_errors(response)
     status_code = response.code.to_s
-    response = JSON.parse(response)
-    return response if status_code == "200" && response['errors'].empty?
+    # handle 400-level response
     if status_code =~ /^4/
-      warn 'shits fucked'
-      # handle 400-level response
+      warn 'your shits fucked'
+    # handle 500-level response
     elsif status_code =~ /^5/
-      warn 'giveto is fucked'
-      # handle 500-level response
+      warn 'givetos fucked'
     end
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160605044426) do
+ActiveRecord::Schema.define(version: 20160703192100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,15 +19,17 @@ ActiveRecord::Schema.define(version: 20160605044426) do
   create_table "artists", force: :cascade do |t|
     t.string   "name"
     t.string   "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.string   "give_to_url"
+    t.boolean  "give_to_verified", default: false
   end
 
   create_table "monthly_top_artists", force: :cascade do |t|
     t.integer  "artist_id"
     t.integer  "user_id"
     t.integer  "play_count"
-    t.string "image"
+    t.string   "image"
     t.datetime "month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

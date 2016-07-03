@@ -4,6 +4,7 @@ ruby '2.2.5'
 gem 'rails', '4.2.1'
 gem 'pg'
 gem 'sidekiq'
+gem 'sidekiq-throttler'
 gem 'redis-rails'
 
 gem 'sass-rails', '~> 5.0'
