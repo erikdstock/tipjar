@@ -1,7 +1,6 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def lastfm
-    puts auth_hash
     @user = User.from_omniauth(auth_hash)
 
     if @user.persisted?

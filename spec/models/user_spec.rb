@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 describe User, type: :model do
-  include TimeHelpers
+  include TimeTools
+  travel_to Time.new(2016, 6, 2).utc
   let(:old_time) { DateTime.new(2016, 5, 12).utc }
 
   def expect_valid_monthly_top_artists(monthly_top_artists, expect_empty: false)
@@ -20,7 +21,7 @@ describe User, type: :model do
   # May want to define/test explicit structure with #expect_valid_monthly_top_artists above
   #
   describe '#top_artists_for_month' do
-    let(:user) { create(:user) }
+    let(:user) { build(:user) }
     let(:finalized_result) do
       create(:monthly_top_artist, user: user, month: old_time, play_count: 10)
       user.top_artists_for_month(old_time)
@@ -31,6 +32,7 @@ describe User, type: :model do
     # wrapped in a VCR.use_casette block
     context '- data is complete - no external api call' do
       it 'returns an AR Relation' do
+        # byebug
         expect_valid_monthly_top_artists(finalized_result)
       end
 
@@ -95,14 +97,13 @@ describe User, type: :model do
           end
         end
 
-        it 'returns an Array' do
-          expect(result).to be_a(Array)
-        end
-
-        it 'returns an ordered list of artist data' do
-          result.each do |artist_data|
-            expect(artist_data[:name]).to be_a(String)
-            expect(artist_data[:play_count]).to be_a(Fixnum)
+        it 'returns a Hash with proper structure' do
+          expect(result).to be_a(Hash)
+          result.each do |key, val|
+            expect(key).to be_a(String)
+            expect(val).to be_a(Hash)
+            expect(val[:image]).to be_a(String)
+            expect(val[:play_count]).to be_a(Fixnum)
           end
         end
       end

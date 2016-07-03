@@ -1,7 +1,5 @@
-This is the show page for user <%= @user.name %>.
-<%= p Rails.env %>
 <ul class="collection with-header">
-  <li class="collection-header"><h4>Top Artists for <%= @month %></h4></li>
+  <li class="collection-header"><h4>Top Artists for <%= format_month_year @month %></h4></li>
   <% @top_artists.each do |top_artist| %>
   <!-- TODO move this to controller or something -->
     <% next if top_artist.play_count < 5 %>

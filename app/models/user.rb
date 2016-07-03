@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include ListeningStats
-  include TimeHelpers
+  include TimeTools
 
   devise :omniauthable, omniauth_providers: [:lastfm]
 
@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
     time_range = time_range_month(time)
     current_artists = current_top_artists(time_range)
     Rails.logger.debug "current_artists are not empty: #{!current_artists.empty?}"
+    # p current_artists.all?(&:final?)
     Rails.logger.debug "current_artists are final: #{current_artists.all?(&:final?)}"
     return current_artists if refreshed || !current_artists.empty? && current_artists.all?(&:final?)
     return top_artists_for_month(time, refreshed: true) if update_top_artists_for_month!(current_artists, time_range)
@@ -69,7 +70,7 @@ class User < ActiveRecord::Base
       errors << monthly_top_artist
       logger.error "artist failed to save"
     end
-    byebug
+    # byebug
     errors.empty?
   end
 

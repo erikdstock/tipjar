@@ -2,7 +2,7 @@ class MonthlyTopArtist < ActiveRecord::Base
   belongs_to :user
   belongs_to :artist
 
-  include TimeHelpers
+  include TimeTools
 
   # updated_at month is greater than self's month property
   def final?

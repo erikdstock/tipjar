@@ -1,5 +1,5 @@
 class LastfmApi < BaseApi
-  include TimeHelpers
+  include TimeTools
   attr_reader :base
 
   def initialize
@@ -26,7 +26,7 @@ class LastfmApi < BaseApi
   def reduce_artists_from_tracks!(response, parsed_artists)
     parsed_artists ||= Hash.new(play_count: 1)
     track_data = response['recenttracks']['track']
-    byebug
+    # byebug
     track_data.each_with_object(parsed_artists) do |track, p_a|
       artist_name = track['artist']['#text']
       image = track['image'][1]['#text']

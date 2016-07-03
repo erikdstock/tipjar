@@ -1,4 +1,4 @@
-module TimeHelpers
+module TimeTools
   def validate_time_in_past(time)
     raise 'month is in the future' if month_start(time).future?
   end

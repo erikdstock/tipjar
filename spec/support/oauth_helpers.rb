@@ -1,29 +1,20 @@
 module OauthHelpers
 
-  def set_omniauth(opts = {})
-    default = {:provider => :lastfm,
-               :uuid     => "erikdstock",
-               :lastfm => {
-                              :name => "erikdstock",
-                              :image => "",
-                            }
-              }
+  def stub_omniauth(opts = {})
+    default = {
+      :provider => :lastfm,
+      :uuid     => "erikdstock",
+      :info => {
+        :name => "erikdstock",
+        :image => "http://img2-ak.lst.fm/i/u/300x300/d471f884db13e2357c915c7547c59edf.png"
+      }
+    }
 
     credentials = default.merge(opts)
     provider = credentials[:provider]
-    user_hash = credentials[provider]
 
     OmniAuth.config.test_mode = true
-
-    OmniAuth.config.mock_auth[provider] = {
-      'uid' => credentials[:uuid],
-      "extra" => {
-      "user_hash" => {
-        "name" => user_hash[:name],
-        "image" => user_hash[:image],
-        }
-      }
-    }
+    OmniAuth.config.mock_auth[provider] = OmniAuth::AuthHash.new(credentials)
   end
 
   # def set_invalid_omniauth(opts = {})
