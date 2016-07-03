@@ -17,6 +17,8 @@ Bundler.require(*Rails.groups)
 
 module Tipjar
   class Application < Rails::Application
+    config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 90.minutes }
+    config.active_job.queue_adapter = :sidekiq
     # config.logger = Logger.new(STDOUT)
     config.log_level = :warn
     # Settings in config/environments/* take precedence over those specified here.
