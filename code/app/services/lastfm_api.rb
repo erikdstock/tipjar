@@ -102,10 +102,10 @@ class LastfmApi < BaseApi
   end
 
   def lastfm_id
-    ENV['lastfm_id']
+    ENV['LASTFM_ID']
   end
 
   def lastfm_secret
-    ENV['lastfm_secret']
+    ENV['LASTFM_SECRET']
   end
 end

@@ -6,8 +6,7 @@ Devise.setup do |config|
   # confirmation, reset password and unlock tokens in the database.
   # Devise will use the `secret_key_base` on Rails 4+ applications as its `secret_key`
   # by default. You can change it below and use your own secret key.
-  config.secret_key = Rails.application.secrets.secret_key_base || 'e6c4f1edab84356e5e57b6895f1e5f441cee685108eac5661f6b7136e749636c835b8f40daa2bff8c0a305a759f370bd4f3614fc6664230e6d26cbc70fb79e56'
-
+  config.secret_key = Rails.application.secrets.secret_key_base
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
@@ -239,9 +238,10 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   config.omniauth :lastfm,
-                  ENV['lastfm_id'],
-                  ENV['lastfm_secret']
-                  {scope: 'user,public_repo'}
+                  ENV['LASTFM_ID'],
+                  ENV['LASTFM_SECRET'],
+                  scope: 'user,public_repo',
+                  callback: "http://#{ENV['LASTFM_CALLBACK']}/users/auth/lastfm/callback"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
