@@ -17,8 +17,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'materialize-sass'
 
 gem 'devise', '~> 3.5.1'
-# gem 'omniauth-lastfm', '~> 0.0.7', git: "git://github.com/erikdstock/omniauth-lastfm.git"
-gem 'omniauth-lastfm', '~> 0.0.6'
+gem 'omniauth-lastfm', '0.0.7', git: "git://github.com/erikdstock/omniauth-lastfm.git"
+# gem 'omniauth-lastfm', '~> 0.0.6'
 gem 'rest-client'
 
 gem 'web-console', '~> 2.0', group: :development
