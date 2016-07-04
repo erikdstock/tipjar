@@ -15,17 +15,17 @@ redis:
   volumes:
     - tipjar-redis:/var/lib/redis/data
 
-tipjar:
+app:
   build: .
   links:
     - postgres
     - redis
   volumes:
-    - .:/code/
+    - ./code:/app
   ports:
     - '8000:8000'
   env_file:
-    - .tipjar.env
+    - .docker.env
 
 sidekiq:
   build: .
@@ -36,4 +36,4 @@ sidekiq:
   volumes:
     - .:/code/
   env_file:
-    - .tipjar.env
+    - .docker.env
