@@ -1,5 +1,5 @@
 # Use the barebones version of Ruby 2.2.5.
-FROM ruby:2.2.5-slim
+FROM ruby:2.2.5
 
 # Optionally set a maintainer name to let people know who made this image.
 # MAINTAINER Nick Janetakis <nick.janetakis@gmail.com>

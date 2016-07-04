@@ -240,8 +240,7 @@ Devise.setup do |config|
   config.omniauth :lastfm,
                   ENV['LASTFM_ID'],
                   ENV['LASTFM_SECRET'],
-                  scope: 'user,public_repo',
-                  callback: "http://#{ENV['LASTFM_CALLBACK']}/users/auth/lastfm/callback"
+                  callback_url: "http://dev.tipjar:8000/users/auth/lastfm/callback"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
