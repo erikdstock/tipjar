@@ -1,8 +1,11 @@
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start
+# Not using this bc it is a private repo
+# require 'codeclimate-test-reporter'
+# CodeClimate::TestReporter.start
+require 'simplecov'
+SimpleCov.start
 
-# require 'webmock/rspec'
-# WebMock.disable_net_connect!(allow_localhost: true, allow: "codeclimate.com")
+require 'webmock/rspec'
+WebMock.disable_net_connect!(allow_localhost: true, allow: "codeclimate.com")
 
 require 'vcr'
 VCR.configure do |c|
