@@ -13,6 +13,7 @@
 /tmp
 /config/secrets.yml
 .byebug*
+/coverage
 
 # Ignore application configuration
 /config/application.yml
