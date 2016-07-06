@@ -1,3 +1,4 @@
 .git
 .dockerignore
 code/Gemfile.lock
+log/
