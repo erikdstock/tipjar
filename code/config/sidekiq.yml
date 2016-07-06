@@ -1,8 +1,9 @@
-:concurrency: 25
-:pidfile: ./tmp/pids/sidekiq.pid
-:logfile: ./log/sidekiq.log
+:concurrency: 5
+production:
+  :concurrency: 10
+# # # :pidfile: ./tmp/pids/sidekiq.pid
+# :logfile: ./log/sidekiq.log
 :queues:
   - default
   - lastfm
   - give_to
-# :daemon: true

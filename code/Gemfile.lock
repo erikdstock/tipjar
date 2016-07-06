@@ -293,7 +293,7 @@ DEPENDENCIES
   devise (~> 3.5.1)
   factory_girl_rails (~> 4.0)
   faker
-  ffi (~> 1.9.10)
+  ffi (= 1.9.10)
   jasmine-rails
   jbuilder (~> 2.0)
   jquery-rails

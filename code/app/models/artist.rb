@@ -1,6 +1,6 @@
 class Artist < ActiveRecord::Base
   has_many :monthly_top_artists
-  after_create :queue_give_to_refresh
+  # after_find :queue_give_to_refresh no! infinite loop of requests bc it will find again inside
   # Check whether artist data is complete
   def give_to_incomplete?
     give_to_url.nil? || !give_to_verified
