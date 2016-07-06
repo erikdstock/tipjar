@@ -1,3 +1,3 @@
 .git
 .dockerignore
-Gemfile.lock
+code/Gemfile.lock
