@@ -1,10 +1,22 @@
 class Artist < ActiveRecord::Base
   has_many :monthly_top_artists
   has_many :users, through: :monthly_top_artists
-  after_create :queue_give_to_refresh
+  after_create :queue_initial_refresh
+
+
+  def queue_initial_refresh
+    queue_give_to_refresh
+    queue_lastfm_refresh
+    #
+  end
 
   def queue_give_to_refresh(clobber: false)
-    ArtistGiveToRefreshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
+    ArtistGivetoRefrTshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
+  end
+
+  def queue_lastfm_refresh(clobber: true)
+    # ArtistLastfmRefreshJob.perform_later(id)
+    logger.warn 'not implemented'
   end
 
   # Update an artist's empty fields
