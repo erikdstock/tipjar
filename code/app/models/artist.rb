@@ -11,7 +11,7 @@ class Artist < ActiveRecord::Base
   end
 
   def queue_give_to_refresh(clobber: false)
-    ArtistGivetoRefrTshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
+    ArtistGiveToRefreshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
   end
 
   def queue_lastfm_refresh(clobber: true)
