@@ -10,10 +10,9 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 before_script:
   - echo "Before Script:"
-  # - cp .docker.env.example .docker.env
-  - docker-compose build
-  - docker-compose run app bundle exec rake db:setup
+  - docker-compose build -f docker-compose.ci.yml
+  - docker-compose run -f docker-compose.ci.yml app bundle exec rake db:setup
 
 script:
   - echo "Running Specs:"
-  - docker-compose run app bundle exec rake spec
+  - docker-compose run -f docker-compose.ci.yml app bundle exec rake spec
