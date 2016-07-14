@@ -35,5 +35,3 @@ sidekiq:
     - redis
   volumes:
     - ./code:/app
-  env_file:
-    - .docker.env
