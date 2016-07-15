@@ -3,8 +3,8 @@ language: ruby
 cache: bundler
 services:
   - docker
-  # - postgresql
-  # - redis-server
+  - postgresql
+  - redis-server
 env:
   DOCKER_COMPOSE_VERSION: 1.7.1
   DOCKER_VERSION: 1.11.1-0~trusty
@@ -22,11 +22,18 @@ before_install:
 before_script:
   - echo "Before Script:"
   - docker-compose -f docker-compose.ci.yml build
-  - |
-    while ! psql --host=localhost --username=postgres -c 'SELECT 1'> /dev/null 2>&1; do
-      echo 'Waiting for postgres...'
-      sleep 1;
-    done;
+  # - |
+  #   secs=60
+  #   endTime=$(( $(date +%s) + secs ))
+  #
+  #   while ! psql --host=localhost --username=postgres -c 'SELECT 1'> /dev/null 2>&1; do
+  #     if [ $(date +%s) -lt $endTime ]; do
+  #       echo 'could not connect to postgres'
+  #       exit 1
+  #     fi
+  #     echo 'Waiting for postgres...'
+  #     sleep 1;
+  #   done;
   # - docker-compose -f docker-compose.ci.yml up
   # - docker-compose -f docker-compose.ci.yml run app rake db:setup
   - docker-compose -f docker-compose.ci.yml run app /bin/sh
