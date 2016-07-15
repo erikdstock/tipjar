@@ -32,8 +32,8 @@ app:
 sidekiq:
   build: .
   command: bundle exec sidekiq -C code/config/sidekiq.yml
-  links:
-    - postgres
-    - redis
+  # links:
+  #   - postgres
+  #   - redis
   volumes:
     - ./code:/app
