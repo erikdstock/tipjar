@@ -19,9 +19,11 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - docker-compose -f docker-compose.ci.yml config
+  # - docker-compose -f docker-compose.ci.yml config
 before_script:
   - echo "Before Script:"
+  - psql -c 'create database tipjar_test;' -U postgres
+  - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
   - docker-compose -f docker-compose.ci.yml run app bundle exec rake db:setup
   - docker-compose -f docker-compose.ci.yml up -d
