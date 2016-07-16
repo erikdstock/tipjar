@@ -11,10 +11,8 @@
 /log/*
 !/log/.keep
 /tmp
-/config/secrets.yml
 .byebug*
 /coverage
 
 # Ignore application configuration
-/config/application.yml
 .DS_Store

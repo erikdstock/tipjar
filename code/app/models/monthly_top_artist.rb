@@ -12,6 +12,10 @@ class MonthlyTopArtist < ActiveRecord::Base
     !same_month?
   end
 
+  def give_to_verified?
+    artist.give_to_verified
+  end
+
   private
 
   def same_month?

@@ -1,0 +1,11 @@
+app:
+  build: .
+  volumes:
+    - ./code:/app
+  ports:
+    - '8000:8000'
+sidekiq:
+  build: .
+  command: bundle exec sidekiq -C code/config/sidekiq.yml
+  volumes:
+    - ./code:/app

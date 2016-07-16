@@ -1,13 +1,22 @@
 class Artist < ActiveRecord::Base
   has_many :monthly_top_artists
-  # after_find :queue_give_to_refresh no! infinite loop of requests bc it will find again inside
-  # Check whether artist data is complete
-  def give_to_incomplete?
-    give_to_url.nil? || !give_to_verified
+  has_many :users, through: :monthly_top_artists
+  after_create :queue_initial_refresh
+
+
+  def queue_initial_refresh
+    queue_give_to_refresh
+    queue_lastfm_refresh
+    #
   end
 
   def queue_give_to_refresh(clobber: false)
     ArtistGiveToRefreshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
+  end
+
+  def queue_lastfm_refresh(clobber: true)
+    # ArtistLastfmRefreshJob.perform_later(id)
+    logger.warn 'not implemented'
   end
 
   # Update an artist's empty fields
@@ -16,7 +25,14 @@ class Artist < ActiveRecord::Base
     self.give_to_url ||= data[:url]
     self.give_to_verified ||= data[:verified]
     self.image ||= data[:image]
-    self.save ? logger.debug('success') : logger.debug('fail')
+    save ? logger.debug('success') : logger.debug('fail')
   end
+
+  # Check whether artist data is complete
+  def give_to_incomplete?
+    give_to_url.nil? || !give_to_verified
+  end
+
+  private
 
 end

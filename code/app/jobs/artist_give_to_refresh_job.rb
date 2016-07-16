@@ -7,11 +7,9 @@ class ArtistGiveToRefreshJob < ActiveJob::Base
     logger.info "checking give.to data for artist #{artist.name}"
     if artist.give_to_incomplete?
       give_to_data = GiveToApi.new.check_artist(artist.name)
-      logger.info give_to_data
       logger.info "updating:"
       if artist.update_empty_give_to_fields(give_to_data)
         logger.info "success"
-        logger.info artist.give_to_verified
         return true
       else
         logger.info "error: save failed"
@@ -19,5 +17,6 @@ class ArtistGiveToRefreshJob < ActiveJob::Base
       end
     end
     logger.info "#{artist.name}'s data is up to date"
+    true
   end
 end

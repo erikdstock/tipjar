@@ -16,6 +16,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Get top artists for month
+  # Currently triggers a refresh automatically, but
+  # TODO trigger refresh as a side effect and return up front.
+  # @param {}
   def top_artists_for_month(time, refreshed: false)
     begin
       validate_time_in_past(time)
