@@ -4,6 +4,16 @@ app:
     - ./code:/app
   ports:
     - '8000:8000'
+  environment:
+    CODECLIMATE_REPO_TOKEN:
+    SECRET_TOKEN:
+    LASTM_ID:
+    LASTM_SECRET:
+    WORKER_PROCESSES:
+    CACHE_URL:
+    JOB_WORKER_URL:
+    LISTEN_ON:
+    DATABASE_URL:
 sidekiq:
   build: .
   command: bundle exec sidekiq -C code/config/sidekiq.yml
