@@ -3,8 +3,8 @@ sudo: required
 # cache: bundler
 services:
   - docker
-  - postgresql
-  - redis-server
+  # - postgresql
+  # - redis-server
 env:
   DOCKER_COMPOSE_VERSION: 1.7.1
   DOCKER_VERSION: 1.11.1-0~trusty
@@ -22,8 +22,8 @@ before_install:
   # - docker-compose -f docker-compose.ci.yml config
 before_script:
   - echo "Before Script:"
-  - psql -c 'create database tipjar_test;' -U postgres
-  - cp database.yml.travis code/config/database.yml
+  # - psql -c 'create database tipjar_test;' -U postgres
+  # - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
   - docker-compose -f docker-compose.ci.yml run app bundle exec rake db:setup
   - docker-compose -f docker-compose.ci.yml up -d
