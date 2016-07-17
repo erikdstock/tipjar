@@ -61,6 +61,8 @@ GEM
       xpath (~> 2.0)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
+    codeclimate-test-reporter (0.6.0)
+      simplecov (>= 0.7.1, < 1.0.0)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -92,7 +94,7 @@ GEM
       railties (>= 3.0.0)
     faker (1.6.5)
       i18n (~> 0.5)
-    ffi (1.9.10)
+    ffi (1.9.14)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashdiff (0.3.0)
@@ -288,12 +290,13 @@ DEPENDENCIES
   awesome_print
   byebug
   capybara
+  codeclimate-test-reporter
   coffee-rails (~> 4.1.0)
   database_cleaner
   devise (~> 3.5.1)
   factory_girl_rails (~> 4.0)
   faker
-  ffi (= 1.9.10)
+  ffi
   jasmine-rails
   jbuilder (~> 2.0)
   jquery-rails
