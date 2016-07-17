@@ -32,7 +32,6 @@ describe User, type: :model do
     # wrapped in a VCR.use_casette block
     context '- data is complete - no external api call' do
       it 'returns an AR Relation' do
-        # byebug
         expect_valid_monthly_top_artists(finalized_result)
       end
 
