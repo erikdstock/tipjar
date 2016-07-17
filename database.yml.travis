@@ -1,5 +1,4 @@
 test:
   adapter: postgresql
   database: tipjar_test
-
- # not using this right now
+  username: postgres
