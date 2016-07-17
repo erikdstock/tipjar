@@ -22,6 +22,9 @@ before_install:
   # - docker-compose -f docker-compose.ci.yml config
 before_script:
   - echo "Before Script:"
+  # Test whether port 5432 is open
+  - nc -z 127.0.0.1 5432
+  # copy travis db config over. not doing this right now.
   # - psql -c 'create database tipjar_test;' -U postgres
   # - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
