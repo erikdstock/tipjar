@@ -14,30 +14,28 @@ app:
     LISTEN_ON: 0.0.0.0:8000
     # in travis must use port 5433 (5432 is blocked?)
     # and the character '&' must be escaped in the db url:
-    DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5433/tipjar?encoding=utf8&pool=5&timeout=5000
-  links:
-    - postgres
-    - redis
+    # DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5433/tipjar?encoding=utf8&pool=5&timeout=5000
+  # links:
+  #   - postgres
+  #   - redis
 
 sidekiq:
   build: .
   command: bundle exec sidekiq -C code/config/sidekiq.yml
-  links:
-    - postgres
-    - redis
+  # links:
+  #   - postgres
+  #   - redis
 
-postgres:
-  image: postgres:9.4.5
-  environment:
-    POSTGRES_USER: tipjar
-    POSTGRES_PASSWORD: yourpassword
-  ports:
-    # travis seems to be blocking port 5432 - see above
-    - '5433:5432'
-
-redis:
-  image: redis:3.0.5
-  ports:
-    - '6379:6379'
-  volumes:
-    - tipjar-redis:/var/lib/redis/data
+# postgres:
+#   image: postgres:9.4.5
+#   environment:
+#     POSTGRES_USER: tipjar
+#     POSTGRES_PASSWORD: yourpassword
+#   ports:
+#     # travis seems to be blocking port 5432 - see above
+#     - '5433:5432'
+#
+# redis:
+#   image: redis:3.0.5
+#   ports:
+#     - '6379:6379'

@@ -3,8 +3,8 @@ sudo: required
 # cache: bundler
 services:
   - docker
-  # - postgresql
-  # - redis-server
+  - postgresql
+  - redis-server
 env:
   DOCKER_COMPOSE_VERSION: 1.7.1
   DOCKER_VERSION: 1.11.1-0~trusty
@@ -22,11 +22,9 @@ before_install:
   # - docker-compose -f docker-compose.ci.yml config
 before_script:
   - echo "Before Script:"
-  # Test whether port 5432 is open
-  - nc -z 127.0.0.1 5432
   # copy travis db config over. not doing this right now.
-  # - psql -c 'create database tipjar_test;' -U postgres
-  # - cp database.yml.travis code/config/database.yml
+  - psql -c 'create database tipjar_test;' -U postgres
+  - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
   # - docker-compose -f docker-compose.ci.yml up -e RAILS_ENV=test -d
   - docker-compose -f docker-compose.ci.yml run app bundle exec rake db:setup
