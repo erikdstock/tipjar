@@ -27,7 +27,7 @@ before_script:
   - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
   # - docker-compose -f docker-compose.ci.yml up -e RAILS_ENV=test -d
-  - docker-compose -f docker-compose.ci.yml run app bundle exec rake db:setup
+  - docker-compose -f docker-compose.ci.yml run -e RAILS_ENV=test app bundle exec rake db:setup
 
 script:
   - echo "Running Specs:"
