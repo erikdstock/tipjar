@@ -13,8 +13,7 @@ app:
     JOB_WORKER_URL: redis://redis:6379/0
     LISTEN_ON: 0.0.0.0:8000
     # in travis must use port 5433 (5432 is blocked?)
-    # and the character '&' must be escaped in the db url ie:
-    # DATABASE_URL=postgresql://tipjar:yourpassword@postgres:5433/tipjar_test?encoding=utf8\&pool=5\&timeout=5000
+    # and the character '&' must be escaped in the db url:
     DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5433/tipjar_test?encoding=utf8\&pool=5\&timeout=5000
   links:
     - postgres
@@ -34,7 +33,7 @@ postgres:
     POSTGRES_PASSWORD: yourpassword
   ports:
     # travis seems to be blocking port 5432 - see above
-    - '5432:5432'
+    - '5433:5432'
 
 redis:
   image: redis:3.0.5
