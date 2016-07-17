@@ -1,10 +1,6 @@
 sudo: required
-# language: ruby
-# cache: bundler
 services:
   - docker
-  - postgresql
-  - redis-server
 env:
   DOCKER_COMPOSE_VERSION: 1.7.1
   DOCKER_VERSION: 1.11.1-0~trusty
@@ -19,15 +15,12 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  # - docker-compose -f docker-compose.ci.yml config
 before_script:
   - echo "Before Script:"
-  # copy travis db config over.
-  - psql -c 'create database tipjar_test;' -U postgres
-  - cp database.yml.travis code/config/database.yml
   - docker-compose -f docker-compose.ci.yml build
-  # RAILS_ENV=test below so that db:setup doesn't try to create a development db
-  - docker-compose -f docker-compose.ci.yml run -e RAILS_ENV=test app bundle exec rake db:setup
+  - docker-compose -f docker-compose.ci.yml run app rake db:setup
 
 script:
   - echo "Running Specs:"
-  - docker-compose -f docker-compose.ci.yml run app bundle exec rake spec
+  - docker-compose -f docker-compose.ci.yml run app rake spec
