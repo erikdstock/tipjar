@@ -4,7 +4,11 @@
   <!-- TODO move this to controller or something -->
     <% next if top_artist.play_count < 5 %>
     <li class="collection-item avatar top-artist">
-      <img src="<%= top_artist.artist.image %>" alt="<%= top_artist.artist.name %>'s picture'" class="circle">
+      <% if top_artist.artist.image && !top_artist.artist.image.empty? %>
+        <img src="<%= top_artist.artist.image %>" alt="<%= top_artist.artist.name %>'s picture'" class="circle">
+      <% else %>
+        <%=image_tag 'headphones.png', class: 'circle', alt: top_artist.artist.name %>
+      <% end %>
       <span class="title"> <%= top_artist.artist.name %> </span>
       <p class="play-count"> Plays this month: <%= top_artist.play_count %> </p>
       <a href="#!" class="secondary-content"><i class="material-icons">stars</i></a>
