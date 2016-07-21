@@ -4,6 +4,12 @@ module TimeTools
   end
 
   def time_range_month(time)
+    begin
+      validate_time_in_past(time)
+    rescue RuntimeError => e
+      logger.debug e.message
+      return []
+    end
     month_start(time)..month_end(time)
   end
 

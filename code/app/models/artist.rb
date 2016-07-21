@@ -3,17 +3,16 @@ class Artist < ActiveRecord::Base
   has_many :users, through: :monthly_top_artists
   after_create :queue_initial_refresh
 
-
   def queue_initial_refresh
-    queue_give_to_refresh
-    queue_lastfm_refresh
+    queue_give_to_update
+    queue_lastfm_update
   end
 
-  def queue_give_to_refresh(clobber: false)
-    ArtistGiveToRefreshJob.perform_later(id, clobber: clobber) if give_to_incomplete?
+  def queue_give_to_update(clobber: false)
+    GiveToUpdateArtistInfoWorker.perform_async(id, clobber: clobber) if give_to_incomplete?
   end
 
-  def queue_lastfm_refresh(clobber: true)
+  def queue_lastfm_update(clobber: true)
     # ArtistLastfmRefreshJob.perform_later(id)
     logger.warn 'not implemented'
   end

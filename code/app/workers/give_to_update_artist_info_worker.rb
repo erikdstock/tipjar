@@ -1,7 +1,6 @@
-class ArtistGiveToRefreshJob < ActiveJob::Base
-  # queue_as :give_to
+class GiveToUpdateArtistInfoWorker
+  include Sidekiq::Worker
 
-  # this method serializes the incoming data to redis so only use artist_id, not whole object
   def perform(artist_id, *_args)
     artist = Artist.find_by(id: artist_id)
     return nil unless artist

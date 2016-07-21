@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 
   has_many :monthly_top_artists
   has_many :top_artists, through: :monthly_top_artists, source: :artist
+  after_create :fetch_initial_top_artists
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -17,53 +18,35 @@ class User < ActiveRecord::Base
   end
 
   # Get top artists for month
-  # Currently triggers a refresh automatically, but
-  # TODO trigger refresh as a side effect and return up front.
-  # @param {}
-  def top_artists_for_month(time, refreshed: false)
-    begin
-      validate_time_in_past(time)
-    rescue RuntimeError => e
-      logger.debug e.message
-      return []
-    end
+  # @param {Time}
+  def top_artists_for_month(time)
     time_range = time_range_month(time)
-    current_artists = current_top_artists(time_range)
-    Rails.logger.debug "current_artists are not empty: #{!current_artists.empty?}"
-    # p current_artists.all?(&:final?)
-    Rails.logger.debug "current_artists are final: #{current_artists.all?(&:final?)}"
-    return current_artists if refreshed || !current_artists.empty? && current_artists.all?(&:final?)
-    return top_artists_for_month(time, refreshed: true) if update_top_artists_for_month!(current_artists, time_range)
-    raise 'Something went wrong on refreshing top artists'
+    current_artists = timely_top_artists(time_range)
+    current_artists
+    # return current_artists if refreshed || !current_artists.empty? && current_artists.all?(&:final?)
+    # return top_artists_for_month(time, refreshed: true) if update_top_artists_for_month!(current_artists, time_range)
   end
 
   private
+
+  # On create, get top artists for current month and 2 previous months.
+  # The previous month's artists are fetched via a queue
+  def fetch_initial_top_artists
+
+  end
 
   # Update existing monthly_top_artists with new data
   # MVP now- optimize later once we have performance baseline
   # @param current_artists {ActiveRecord Collection}
   # @param time_range {Range} Calendar month to update
   # @return {ActiveRecord Collection} of updated artists
-  def update_top_artists_for_month!(current_top_artists, time_range, min_plays: 5)
-    Rails.logger.debug "updating monthly top artists..."
-    month = time_range.first
+  def update_top_artists_for_month(current_artists, new_artists, month)
     errors = []
-    fresh_artists = refresh_monthly_top_artists(time_range)
-      # .select{ |a| a[:play_count] >= min_plays } # TODO this is a weird place to filter
-    # fresh_artist_hash = fresh_artists.map{ |artist| [artist[:name], artist] }.to_h
-    # current_top_artists.each do |old_mta|
-    #   artist = old_mta.artist
-    #   new_artist_data = fresh_artist_hash.delete(artist.name)
-    #   if new_artist_data # How could there not be?
-    #     artist.update(new_artist_data) if artist.image.nil?
-    #     old_mta.update(play_count: new_artist_data[:play_count])
-    #   end
-    # end
-    fresh_artists.each do |name, new_artist_data|
+    new_artists.each do |name, new_artist_data|
       artist = Artist.find_or_create_by(name: name) do |a|
         a.image ||= new_artist_data[:image]
       end
-      monthly_top_artist = current_top_artists.find_or_create_by(artist: artist, month: month) do |mta|
+      monthly_top_artist = current_artists.find_or_create_by(artist: artist, month: month) do |mta|
         mta.play_count = new_artist_data[:play_count]
         mta.image = new_artist_data[:image]
         mta.user = self
@@ -74,8 +57,7 @@ class User < ActiveRecord::Base
       errors << monthly_top_artist
       logger.error "artist failed to save"
     end
-    # byebug
-    errors.empty?
+    errors.empty? ? self : false
   end
 
   # Refresh stale top artists
@@ -90,7 +72,7 @@ class User < ActiveRecord::Base
     # also clobber/update the old monthly top artists
   end
 
-  def current_top_artists(time_range)
+  def timely_top_artists(time_range)
     MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
   end
 
