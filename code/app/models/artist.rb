@@ -7,7 +7,6 @@ class Artist < ActiveRecord::Base
   def queue_initial_refresh
     queue_give_to_refresh
     queue_lastfm_refresh
-    #
   end
 
   def queue_give_to_refresh(clobber: false)
@@ -32,7 +31,5 @@ class Artist < ActiveRecord::Base
   def give_to_incomplete?
     give_to_url.nil? || !give_to_verified
   end
-
-  private
 
 end
