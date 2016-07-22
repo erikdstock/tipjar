@@ -8,7 +8,7 @@ module TimeTools
       validate_time_in_past(time)
     rescue RuntimeError => e
       logger.debug e.message
-      return []
+      return
     end
     month_start(time)..month_end(time)
   end

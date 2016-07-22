@@ -6,9 +6,10 @@ module DashboardHelper
   # @param :sort_by {Symbol} sort by descriptor - default play_count descending
   # @return {ActiveRecord::Relation} Sorted
   def sort_top_artists!(top_artists, min_plays: 5, limit: 20, sort_by: :play_count)
-    top_artists.to_a.select! { |top_artist| top_artist.play_count >= min_plays }
-               .sort_by!(&sort_by)
-               .reverse!
+    # byebug
+    top_artists.select { |top_artist| top_artist.play_count >= min_plays }
+               .sort_by(&sort_by)
+               .reverse
                .slice(0, limit)
   end
 end

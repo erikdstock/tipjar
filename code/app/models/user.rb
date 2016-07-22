@@ -1,12 +1,10 @@
 class User < ActiveRecord::Base
   include ListeningStats
   include TimeTools
-
   devise :omniauthable, omniauth_providers: [:lastfm]
-
   has_many :monthly_top_artists
   has_many :top_artists, through: :monthly_top_artists, source: :artist
-  after_create :fetch_initial_top_artists
+  after_create :queue_initial_refresh
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -21,58 +19,42 @@ class User < ActiveRecord::Base
   # @param {Time}
   def top_artists_for_month(time)
     time_range = time_range_month(time)
-    current_artists = timely_top_artists(time_range)
+    current_artists = top_artists_for_time(time_range)
     current_artists
-    # return current_artists if refreshed || !current_artists.empty? && current_artists.all?(&:final?)
-    # return top_artists_for_month(time, refreshed: true) if update_top_artists_for_month!(current_artists, time_range)
+  end
+
+  # On create, get top artists for current month and previous month.
+  # The previous month's artists are fetched via a queue
+  def queue_initial_refresh
+    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
+    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
+    # LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 2.months.ago)
+  end
+
+  # Update existing monthly_top_artists with new data
+  # TODO: this method needs testing.
+  # @param new_artists [Hash] of values to update/create artists
+  # @param month [Time] time-like object with month
+  # @return {ActiveRecord Relation} of updated artists or false
+  def update_top_artists_for_month(new_artists, month)
+    User.transaction do
+      top_artists_for_month(month).delete_all
+      new_collection = new_artists.map do |name, new_artist_data|
+        artist = Artist.find_or_create_by(name: name)
+        artist.image ||= new_artist_data[:image]
+        MonthlyTopArtist.new(user: self,
+                             artist: artist,
+                             month: month,
+                             play_count: new_artist_data[:play_count],
+                             image: new_artist_data[:image])
+      end
+      new_collection.each(&:save!)
+    end
   end
 
   private
 
-  # On create, get top artists for current month and 2 previous months.
-  # The previous month's artists are fetched via a queue
-  def fetch_initial_top_artists
-
-  end
-
-  # Update existing monthly_top_artists with new data
-  # MVP now- optimize later once we have performance baseline
-  # @param current_artists {ActiveRecord Collection}
-  # @param time_range {Range} Calendar month to update
-  # @return {ActiveRecord Collection} of updated artists
-  def update_top_artists_for_month(current_artists, new_artists, month)
-    errors = []
-    new_artists.each do |name, new_artist_data|
-      artist = Artist.find_or_create_by(name: name) do |a|
-        a.image ||= new_artist_data[:image]
-      end
-      monthly_top_artist = current_artists.find_or_create_by(artist: artist, month: month) do |mta|
-        mta.play_count = new_artist_data[:play_count]
-        mta.image = new_artist_data[:image]
-        mta.user = self
-      end
-      # byebug
-      next if artist.persisted? && monthly_top_artist.persisted?
-      # byebug
-      errors << monthly_top_artist
-      logger.error "artist failed to save"
-    end
-    errors.empty? ? self : false
-  end
-
-  # Refresh stale top artists
-  # @param {Range} time range from #monthly_top_artists
-  # @return {Collection} ActiveRecord Collection of [unsaved?] artists or false/raise?
-  def refresh_monthly_top_artists(time_range)
-    artists = fetch_top_artists_by_period(from: time_range.first, to: time_range.last)
-    artists
-    # TODO
-    # Artists will be a hash, need to save each as an actual MTA
-    # if artists can be saved, return artists, else return false
-    # also clobber/update the old monthly top artists
-  end
-
-  def timely_top_artists(time_range)
+  def top_artists_for_time(time_range)
     MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
   end
 

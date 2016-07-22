@@ -2,8 +2,10 @@ require 'rails_helper'
 include TimeTools
 
 describe User, type: :model do
-  travel_to Time.new(2016, 6, 2).utc
   let(:old_time) { DateTime.new(2016, 5, 12).utc }
+  before(:all) do
+    travel_to Time.new(2016, 6, 2).utc
+  end
 
   def expect_valid_monthly_top_artists(monthly_top_artists, expect_empty: false)
     expect(monthly_top_artists).to be_a ActiveRecord::Relation
@@ -18,10 +20,8 @@ describe User, type: :model do
   end
 
   # This is the main entry point for the app to a user's top artist data.
-  # May want to define/test explicit structure with #expect_valid_monthly_top_artists above
-  #
   describe '#top_artists_for_month' do
-    let(:user) { build(:user) }
+    let(:user) { create(:user) }
     let(:finalized_result) do
       create(:monthly_top_artist, user: user, month: old_time, play_count: 10)
       user.top_artists_for_month(old_time)
