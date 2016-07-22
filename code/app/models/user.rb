@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
     end
   end
 
+
   # Get top artists for month
   # @param {Time}
   def top_artists_for_month(time)
@@ -23,13 +24,6 @@ class User < ActiveRecord::Base
     current_artists
   end
 
-  # On create, get top artists for current month and previous month.
-  # The previous month's artists are fetched via a queue
-  def queue_initial_refresh
-    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
-    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
-    # LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 2.months.ago)
-  end
 
   # Update existing monthly_top_artists with new data
   # TODO: this method needs testing.
@@ -52,6 +46,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  # On create, get top artists for current month and previous month.
+  def queue_initial_refresh
+    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
+    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
+    # LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 2.months.ago)
+  end
   private
 
   def top_artists_for_time(time_range)

@@ -1,6 +1,7 @@
 # Not using this bc it is a private repo
 # require 'codeclimate-test-reporter'
 # CodeClimate::TestReporter.start
+
 require 'simplecov'
 SimpleCov.start
 

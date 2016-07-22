@@ -17,7 +17,7 @@ describe User, type: :model do
     end
   end
 
-  # This is the main entry point for the app to a user's top artist data.
+  # This is the getter for a user's monthly top artists scoped by month.
   describe '#top_artists_for_month' do
     let(:user) { create(:user) }
     let(:finalized_result) do
@@ -36,6 +36,18 @@ describe User, type: :model do
         result = finalized_result.first
         expect { result.play_count && result.artist.name && result.artist.image }.not_to raise_error
       end
+    end
+  end
+
+  # Setter for user's top artists scoped by month
+  describe '#update_top_artists_for_month' do
+    context 'successful save' do
+      it 'returns and AR relation'
+      it 'returns the same AR relation that #fetch_top_artists would'
+    end
+    context 'save fails' do
+      it 'rolls back the transaction- initial artists are still there'
+      it 'returns false'
     end
   end
 end
