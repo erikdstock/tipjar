@@ -31,27 +31,25 @@ class User < ActiveRecord::Base
   # @param month [Time] time-like object with month
   # @return {ActiveRecord Relation} of updated artists or false
   def update_top_artists_for_month(new_artists, month)
-    User.transaction do
-      top_artists_for_month(month).delete_all
-      new_collection = new_artists.map do |name, new_artist_data|
-        artist = Artist.find_or_create_by(name: name)
-        artist.image ||= new_artist_data[:image]
-        MonthlyTopArtist.new(user: self,
-                             artist: artist,
-                             month: month,
-                             play_count: new_artist_data[:play_count],
-                             image: new_artist_data[:image])
-      end
-      new_collection.each(&:save!)
+    top_artists_for_month(month).delete_all
+    new_collection = new_artists.map do |name, new_artist_data|
+      artist = Artist.find_or_create_by(name: name)
+      artist.image ||= new_artist_data[:image]
+      MonthlyTopArtist.new(user: self,
+                           artist: artist,
+                           month: month,
+                           play_count: new_artist_data[:play_count],
+                           image: new_artist_data[:image])
     end
+    save_collection(new_collection)
   end
 
   # On create, get top artists for current month and previous month.
   def queue_initial_refresh
     LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
     LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
-    # LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 2.months.ago)
   end
+
   private
 
   def top_artists_for_time(time_range)
@@ -68,6 +66,16 @@ class User < ActiveRecord::Base
       "artist_id",
       "monthly_top_artists.updated_at"
     ].join(", ")
+  end
+
+  def save_collection(collection)
+    success = collection.map(&:save)
+    unless success.all?
+      errored = new_collection.select { |m| !m.errors.blank? }
+      errored.each { |m| logger.warn m.errors }
+      return false
+    end
+    true
   end
 
 end

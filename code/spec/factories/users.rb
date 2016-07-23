@@ -5,6 +5,17 @@ FactoryGirl.define do
     name 'erikdstock'
     uid 'erikdstock' # user in lastfm api examples
     provider 'lastfm'
+
+    # after(:build) { |u| u.class.skip_callback(:create, :after, :queue_initial_refresh) }
+
+    # Create a user with only 5 plays so far. At the end of this month
+    # (may 2016) it should be 12 plays.
+    factory :user_with_stats do
+      after(:create) do |user, _evaluator|
+        artist = create :artist, name: "MisterWives"
+        create(:monthly_top_artist, artist: artist, play_count: 5, user: user, month: 1.month.ago)
+      end
+    end
   end
 
   # # user_with_posts will create post data after the user has been created
