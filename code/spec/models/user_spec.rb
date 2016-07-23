@@ -39,6 +39,7 @@ describe User, type: :model do
   end
 
   # Setter for user's top artists scoped by month
+  # TODO this could use more tests/edge cases? what if save fails?
   describe '#update_top_artists_for_month' do
     let(:user) { create(:user_with_stats) }
     let(:new_artists) { [] }
