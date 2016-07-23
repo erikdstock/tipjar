@@ -1,40 +1,41 @@
-app:
-  build: .
-  ports:
-    - '8000:8000'
-  environment:
-    # set these values in CI
-    CODECLIMATE_REPO_TOKEN:
-    SECRET_TOKEN:
-    LASTFM_ID:
-    LASTFM_SECRET:
-    WORKER_PROCESSES: 1
-    CACHE_URL: redis://redis:6379/0
-    JOB_WORKER_URL: redis://redis:6379/0
-    LISTEN_ON: 0.0.0.0:8000
-    # in travis must use port 5433 (5432 is blocked?)
-    DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5433/tipjar?encoding=utf8&pool=5&timeout=5000
-  links:
-    - postgres
-    - redis
+version: '2'
+volumes:
+  tipjar-redis:
+  tipjar-postgres:
 
-sidekiq:
-  build: .
-  command: bundle exec sidekiq -C code/config/sidekiq.yml
-  links:
-    - postgres
-    - redis
+services:
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    environment:
+      # set these values in CI
+      CODECLIMATE_REPO_TOKEN:
+      SECRET_TOKEN:
+      LASTFM_ID:
+      LASTFM_SECRET:
+      WORKER_PROCESSES: 1
+      CACHE_URL: redis://redis:6379/0
+      JOB_WORKER_URL: redis://redis:6379/0
+      LISTEN_ON: 0.0.0.0:8000
+      # in travis must use port 5433 (5432 is blocked?) no i'm not doing this
+      DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5432/tipjar?encoding=utf8&pool=5&timeout=5000
+    links:
+      - postgres
+      - redis
 
-postgres:
-  image: postgres:9.4.5
-  environment:
-    POSTGRES_USER: tipjar
-    POSTGRES_PASSWORD: yourpassword
-  ports:
-    - '5433:5432'
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq -C code/config/sidekiq.yml
+    links:
+      - postgres
+      - redis
 
+  postgres:
+    image: postgres:9.4.5
+    environment:
+      POSTGRES_USER: tipjar
+      POSTGRES_PASSWORD: yourpassword
 
-redis:
-  image: redis:3.0.5
-  ports:
-    - '6379:6379'
+  redis:
+    image: redis:3.0.5

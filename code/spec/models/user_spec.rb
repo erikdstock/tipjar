@@ -2,8 +2,8 @@ require 'rails_helper'
 include TimeTools
 
 describe User, type: :model do
-  travel_to Time.new(2016, 6, 2).utc
-  let(:old_time) { DateTime.new(2016, 5, 12).utc }
+  before(:all) { travel_to Time.new(2016, 6, 2).utc }
+  after(:all) { travel_to Time.now.utc }
 
   def expect_valid_monthly_top_artists(monthly_top_artists, expect_empty: false)
     expect(monthly_top_artists).to be_a ActiveRecord::Relation
@@ -17,22 +17,18 @@ describe User, type: :model do
     end
   end
 
-  # This is the main entry point for the app to a user's top artist data.
-  # May want to define/test explicit structure with #expect_valid_monthly_top_artists above
-  #
+  # This is the getter for a user's monthly top artists scoped by month.
   describe '#top_artists_for_month' do
-    let(:user) { build(:user) }
+    let(:user) { create(:user_with_stats) }
     let(:finalized_result) do
-      create(:monthly_top_artist, user: user, month: old_time, play_count: 10)
-      user.top_artists_for_month(old_time)
+      user.top_artists_for_month(1.month.ago)
     end
 
-    # If data is complete (month is over & updated after month end) no api
-    # call will be made- VCR/Webmock will block these calls since they are not
-    # wrapped in a VCR.use_casette block
-    context '- data is complete - no external api call' do
+    context 'finalized structure for good data' do
       it 'returns an AR Relation' do
         expect_valid_monthly_top_artists(finalized_result)
+        expect(finalized_result.length).to eq 1
+        expect(finalized_result.first.play_count).to eq 5
       end
 
       it 'contains monthly_top_artists data plus artist name and image attrs' do
@@ -40,72 +36,37 @@ describe User, type: :model do
         expect { result.play_count && result.artist.name && result.artist.image }.not_to raise_error
       end
     end
-
-    context '- data is unreliable - refreshes with api' do
-      let(:this_month_time) { month_start(DateTime.now.utc) }
-      let(:stale_time) { DateTime.new(2016, 3, 12).utc }
-      let(:this_month_result) do
-        create(:monthly_top_artist, user: user, month: this_month_time, play_count: 10)
-        user.top_artists_for_month(old_time)
-      end
-      let(:stale_result) do
-        create(:monthly_top_artist, user: user, month: old_time, play_count: 10, updated_at: (this_month_time + 1.hour))
-        user.top_artists_for_month(old_time)
-      end
-
-      it 'calls the api if data is from the current month' do
-        VCR.use_cassette 'lastfm_user_getrecenttracks_this_month' do
-          Rails.logger.warn 'assert that api is actually called? or maybe not necessary at all'
-          Rails.logger.warn 'might want to actually stub timenow for more reliable data'
-          expect_valid_monthly_top_artists(this_month_result)
-        end
-      end
-
-      it 'calls the api if data is the data has not been updated since the month end' do
-        Rails.logger.warn 'assert that api is actually called? or maybe not necessary at all'
-        VCR.use_cassette 'lastfm_user_getrecenttracks_stale' do
-          expect_valid_monthly_top_artists(stale_result)
-        end
-      end
-
-      it 'returns an empty array immediately if the month is in the future' do
-        expect(user.top_artists_for_month(2.months.from_now)).to eq []
-      end
-
-      it 'calls the api if there is no data for the month' do
-        skip
-      end
-    end
-
-    it 'can be overridden to refresh with api data' do
-      skip 'Not Implemented'
-    end
   end
 
-  describe 'ListeningStats Module' do
-    describe '#fetch_top_artists_by_period' do
-      context 'using lastFm api' do
-        let(:result) do
-          user = build :user
-          old_time_range = time_range_month(old_time)
-          VCR.use_cassette('lastfm_fetch_top_artists', record: :once, :match_requests_on => [:host, :path]) do
-            user.fetch_top_artists_by_period(
-              from: old_time_range.first,
-              to: old_time_range.last.utc
-            )
-          end
-        end
-
-        it 'returns a Hash with proper structure' do
-          expect(result).to be_a(Hash)
-          result.each do |key, val|
-            expect(key).to be_a(String)
-            expect(val).to be_a(Hash)
-            expect(val[:image]).to be_a(String)
-            expect(val[:play_count]).to be_a(Fixnum)
-          end
-        end
+  # Setter for user's top artists scoped by month
+  # TODO this could use more tests/edge cases? what if save fails?
+  describe '#update_top_artists_for_month' do
+    let(:user) { create(:user_with_stats) }
+    let(:new_artists) { [] }
+    context 'successful save' do
+      it 'returns true' do
+        expect(user.update_top_artists_for_month(new_artists, 1.month.ago)).to be true
       end
+
+      it 'changes existing MTAs and adds new ones' do
+        user = create :user_with_stats
+        new_artist = create :artist
+        time = 1.month.ago
+        initial = user.top_artists_for_month(time)
+        artist = initial.first.artist
+        data = {artist.name => {play_count: 13, image: 'foo'},
+                new_artist.name => {play_count: 7, image: 'bar'}}
+        user.update_top_artists_for_month(data, time)
+        result = user.top_artists_for_month(time)
+        change = result.where(artist_id: artist.id).first.play_count - initial.first.play_count
+        expect(change).to eq 8
+        expect(result.length).to eq 2
+      end
+      # it 'returns the same AR relation that #fetch_top_artists would'
     end
+    # context 'save fails' do
+    #   it 'rolls back the transaction- initial artists are still there'
+    #   it 'returns false'
+    # end
   end
 end

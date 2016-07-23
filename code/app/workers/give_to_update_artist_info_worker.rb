@@ -1,15 +1,13 @@
-class ArtistGiveToRefreshJob < ActiveJob::Base
-  # queue_as :give_to
+class GiveToUpdateArtistInfoWorker
+  include Sidekiq::Worker
 
-  # this method serializes the incoming data to redis so only use artist_id, not whole object
   def perform(artist_id, *_args)
     artist = Artist.find_by(id: artist_id)
     return nil unless artist
     if artist.give_to_incomplete?
       give_to_data = GiveToApi.new.check_artist(artist.name)
-      logger.info "updating:"
       if artist.update_empty_give_to_fields(give_to_data)
-        logger.info "success"
+        logger.info "Updated #{artist.name}'s data"
         return true
       else
         logger.info "error: save failed"
