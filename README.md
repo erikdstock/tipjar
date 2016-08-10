@@ -1,3 +1,7 @@
+![travis](https://travis-ci.org/erikdstock/tipjar.svg?branch=master)
+[![Test Coverage](https://codeclimate.com/github/erikdstock/tipjar/badges/coverage.svg)](https://codeclimate.com/github/erikdstock/tipjar/coverage)
+[![Code Climate](https://codeclimate.com/github/erikdstock/tipjar/badges/gpa.svg)](https://codeclimate.com/github/erikdstock/tipjar)
+
 # tipjar
 Tip bands you love since you don't pay for music any more.
 
