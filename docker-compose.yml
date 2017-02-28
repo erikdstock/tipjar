@@ -1,0 +1,53 @@
+version: '2'
+volumes:
+  groupy-redis:
+  groupy-postgres:
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - postgres
+      - redis
+    volumes:
+      - ./app:/src
+    ports:
+      - '3000:3000'
+    env_file:
+      - .docker.env
+    stdin_open: true
+    tty: true
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    links:
+      - postgres
+      - redis
+    volumes:
+      - ./app:/src
+    env_file:
+      - .docker.env
+    stdin_open: true
+    tty: true
+  
+  redis:
+    image: redis:3.0.5
+    ports:
+      - '6379:6379'
+    volumes:
+      - groupy-redis:/var/lib/redis/data
+
+  postgres:
+    image: postgres:9.6.2
+    environment:
+      POSTGRES_USER: groupy
+      POSTGRES_PASSWORD: yourpassword
+    ports:
+      - '5432:5432'
+    volumes:
+      - groupy-postgres:/var/lib/postgresql/data
