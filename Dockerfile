@@ -1,16 +1,12 @@
 FROM ruby:2.3
-
+ENTRYPOINT ["bundle", "exec"]
 # throw errors if Gemfile has been modified since Gemfile.lock
 # RUN bundle config --global frozen 1
 ENV INSTALL_PATH /src
 RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
 
-# For puma
-CMD ["rails", "server", "-b", "0.0.0.0"]
 
-# The default command that gets ran will be to start the Unicorn server. [NOT USING]
-# CMD ["bundle", "exec", "unicorn", "-c", "config/unicorn.rb"]
 
 # Install dependencies:
 # - build-essential: To ensure certain gems can be compiled
@@ -29,3 +25,8 @@ COPY app/Gemfile ./
 RUN bundle install
 
 COPY app .
+
+# For puma (rails default in script)
+CMD ["./script/start.sh"]
+# The default command that gets ran will be to start the Unicorn server. [NOT USING]
+# CMD ["bundle", "exec", "unicorn", "-c", "config/unicorn.rb"]
