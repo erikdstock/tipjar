@@ -25,6 +25,7 @@ class LastfmApi < BaseApi
   # Restructures artist track_data with counts
   def reduce_artists_from_tracks!(response, parsed_artists)
     parsed_artists ||= Hash.new(play_count: 1)
+    p response
     track_data = response['recenttracks']['track']
     # byebug
     track_data.each_with_object(parsed_artists) do |track, p_a|

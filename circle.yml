@@ -1,0 +1,11 @@
+machine:
+  services:
+    - docker
+dependencies:
+  override:
+    - sudo pip install --upgrade docker-compose==1.11.2
+    - docker-compose build
+
+test:
+  override:
+    - docker-compose run rake

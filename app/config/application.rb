@@ -17,7 +17,7 @@ module Src
     # in the foreground.
     config.log_level = :debug
     config.log_tags  = %i(subdomain uuid)
-    config.logger    = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+    config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
 
     # Since we're using Redis for Sidekiq, we might as well use Redis to back
     # our cache store. This keeps our application stateless as well.
