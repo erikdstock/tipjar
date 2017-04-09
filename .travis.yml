@@ -1,0 +1,30 @@
+sudo: required
+services:
+  - docker
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.1
+  DOCKER_VERSION: 1.11.1-0~trusty
+
+before_install:
+  # list docker-engine versions
+  - apt-cache madison docker-engine
+  - echo 'docker service default version:'
+  - docker --version
+  - echo "installing docker-engine $DOCKER_VERSION"
+  # upgrade docker-engine to specific version
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" install --force-yes docker-engine=${DOCKER_VERSION}
+  # upgrade docker-compose
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  # - docker-compose -f docker-compose.ci.yml config
+before_script:
+  - echo "Before Script:"
+  - docker-compose -f docker-compose.ci.yml build
+  - docker-compose -f docker-compose.ci.yml up -d
+  - docker-compose -f docker-compose.ci.yml run app rake db:setup --trace
+
+script:
+  - echo "Running Specs:"
+  - docker-compose -f docker-compose.ci.yml run app rake spec
