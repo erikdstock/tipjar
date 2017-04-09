@@ -8,13 +8,14 @@ class Artist < ApplicationRecord
     queue_lastfm_update
   end
 
+  # 
   def queue_give_to_update(clobber: false)
     GiveToUpdateArtistInfoWorker.perform_async(id, clobber: clobber) if give_to_incomplete?
   end
 
   def queue_lastfm_update(clobber: true)
     # ArtistLastfmRefreshJob.perform_later(id)
-    logger.warn 'not implemented'
+    # logger.warn 'not implemented'
   end
 
   # Update an artist's empty fields

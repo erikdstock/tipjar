@@ -1,8 +1,7 @@
 class MonthlyTopArtist < ApplicationRecord
+  include TimeTools
   belongs_to :user
   belongs_to :artist, autosave: true
-
-  include TimeTools
 
   # updated_at month is greater than self's month property
   def final?
