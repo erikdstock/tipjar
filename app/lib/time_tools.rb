@@ -25,6 +25,6 @@ module TimeTools
   # @param {DateTime} date_time object
   # @return {Fixnum} unix time
   def unix_time(date_time)
-    date_time.to_time.to_i
+    date_time.nil? ? nil : date_time.to_time.to_i
   end
 end
