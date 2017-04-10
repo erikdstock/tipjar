@@ -21,7 +21,7 @@ module Users
     def lastfm
       omni = request.env['omniauth.auth']
       p omni
-      authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
+      authentication = Authentication.find_by(provider: omni['provider'], uid: omni['uid'])
       if authentication
         p 'Wubba'
         sign_in_user(authentication)
@@ -34,10 +34,9 @@ module Users
       end
     end
 
-
     def spotify
       omni = request.env['omniauth.auth']
-      authentication = Authentication.find_by_provider_and_uid(omni['provider'], omni['uid'])
+      authentication = Authentication.find_by(provider: omni['provider'], uid: omni['uid'])
       if authentication
         sign_in_user(authentication)
       elsif current_user

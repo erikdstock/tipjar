@@ -2,9 +2,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def format_month_year(time)
-    time.strftime "%B %Y"
+    time.strftime '%B %Y'
   end
-
 
   # CORS stuff we don't need right now
   # before_action :allow_cross_origin_requests

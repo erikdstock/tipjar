@@ -8,7 +8,7 @@ class Artist < ApplicationRecord
     queue_lastfm_update
   end
 
-  # 
+  #
   def queue_give_to_update(clobber: false)
     GiveToUpdateArtistInfoWorker.perform_async(id, clobber: clobber) if give_to_incomplete?
   end

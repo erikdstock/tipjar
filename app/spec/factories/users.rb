@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :user do
     password Devise.friendly_token[0, 20]
     email 'user@test.com'
-    name 'erikdstock'
+    lastfm_name 'erikdstock'
     after(:create) do |user, _evaluator|
       create(:authentication, user: user)
     end

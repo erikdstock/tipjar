@@ -3,6 +3,7 @@ class DeviseCreateUsers < ActiveRecord::Migration[5.1]
     create_table :users do |t|
       t.string  :password
       t.string  :name
+      t.string  :lastfm_name
       t.string  :image
 
       # ## Database authenticatable

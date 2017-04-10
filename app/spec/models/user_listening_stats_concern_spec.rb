@@ -5,7 +5,7 @@ RSpec.describe 'ListeningStats Concern' do
   describe '#fetch_top_artists_by_period' do
     context 'using lastFm api' do
       let(:result) do
-        VCR.use_cassette('lastfm_fetch_top_artists', record: :once, match_requests_on: %i(host path)) do
+        VCR.use_cassette('listening_stats_lastfm', record: :once, match_requests_on: %i(host path)) do
           user = build :user
           time_range = time_range_month(1.month.ago)
           user.fetch_top_artists_by_period(

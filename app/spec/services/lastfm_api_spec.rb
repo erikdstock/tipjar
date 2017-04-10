@@ -12,7 +12,7 @@ RSpec.describe LastfmApi do
   end
 
   context '#get_top_artists' do
-    let(:user) { FactoryGirl.build(:user) }
+    let(:user) { FactoryGirl.build(:user, lastfm_name: 'erikdstock') }
     let(:result) do
       VCR.use_cassette('lastfm_user.gettopartists') do
         api = LastfmApi.new

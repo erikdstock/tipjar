@@ -8,16 +8,16 @@ class User < ApplicationRecord
   after_create :queue_initial_refresh
 
   devise :database_authenticatable, # hashes and stores a password in the database to validate user
-      :omniauthable,             # omniauth.
-      :recoverable,              # Password reset
-      :registerable,             # handles signing up users through a registration process
-      :rememberable,             # manages generating and clearing a token for remembering the user from cookie
-      :trackable,                # tracks sign in count, timestamps and IP address.
-      :validatable,              # provides validations of email and password.
-      omniauth_providers: [:lastfm]
-    # :confirmable,            # sends emails with confirmation instructions and verifies an account is confirmed
-    # :lockable,               # lock account after failed signin attempts
-    # :timeoutable,            # expires sessions that have not been active in a specified period of time.
+         :omniauthable,             # omniauth.
+         :recoverable,              # Password reset
+         :registerable,             # handles signing up users through a registration process
+         :rememberable,             # manages generating and clearing a token for remembering the user from cookie
+         :trackable,                # tracks sign in count, timestamps and IP address.
+         :validatable,              # provides validations of email and password.
+         omniauth_providers: [:lastfm]
+  # :confirmable,            # sends emails with confirmation instructions and verifies an account is confirmed
+  # :lockable,               # lock account after failed signin attempts
+  # :timeoutable,            # expires sessions that have not been active in a specified period of time.
 
   # Get top artists for month
   # @param {Time}
@@ -51,8 +51,6 @@ class User < ApplicationRecord
     LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
     LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
   end
-
-  private
 
   def top_artists_for_time(time_range)
     MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
@@ -98,5 +96,4 @@ class User < ApplicationRecord
       token_secret: omni['credentials'].secret
     )
   end
-
 end

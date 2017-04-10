@@ -11,6 +11,7 @@ class LastfmApi < BaseApi
   def top_artists_by_period(user, from: nil, to: nil, parsed_artists: nil, page: 1)
     Rails.logger.debug "getting page #{page}"
     response = get_recent_tracks(user, limit: 200, from: from, to: to, page: page)
+    # byebug
     parsed_artists = reduce_artists_from_tracks!(response, parsed_artists)
     if done_paging?(response, 'recenttracks', page)
       # result = parsed_artists.sort_by { |_name, data| data[:count] }.reverse!
@@ -18,27 +19,27 @@ class LastfmApi < BaseApi
       # return result
       return parsed_artists
     end
-    page += 1
-    top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page)
+    top_artists_by_period(user, from: from, to: to, parsed_artists: parsed_artists, page: page + 1)
   end
 
   # Restructures artist track_data with counts
-  def reduce_artists_from_tracks!(response, parsed_artists)
-    parsed_artists ||= Hash.new(play_count: 1)
-    p response
-    track_data = response['recenttracks']['track']
-    # byebug
-    track_data.each_with_object(parsed_artists) do |track, p_a|
-      artist_name = track['artist']['#text']
-      image = track['image'][1]['#text']
-      current_artist_count = p_a[artist_name]
-      count = current_artist_count[:play_count]
-      p_a[artist_name] = {
-        play_count: count + 1,
-        image: image
-      }
-      p_a
-    end
+  def reduce_artists_from_tracks!(response, parsed_artists = Hash.new(play_count: 1))
+    response['recenttracks']['track']
+      .group_by { |t| t['artist']['#text']}
+      .map { |a, ts| [a, { play_count: ts.length, image: ts.first['image'][1]['#text'] }] }
+      .to_h
+    # track_data = response['recenttracks']['track']
+    # track_data.each_with_object(parsed_artists) do |track, p_a|
+    #   artist_name = track['artist']['#text']
+    #   image = track['image'][1]['#text']
+    #   current_artist_count = p_a[artist_name]
+    #   count = current_artist_count[:play_count]
+    #   p_a[artist_name] = {
+    #     play_count: count + 1,
+    #     image: image
+    #   }
+    #   p_a
+    # end
   end
 
   def done_paging?(response, method_name, expected_page)
@@ -61,7 +62,7 @@ class LastfmApi < BaseApi
     more_params[:page] = args.fetch(:page, 1)
     more_params[:limit] = args.fetch(:limit, 200)
     params = {
-      user: user.name,
+      user: user.lastfm_name,
       api_key: lastfm_id,
       method: 'user.getrecenttracks',
       format: 'json'
@@ -74,7 +75,7 @@ class LastfmApi < BaseApi
   # this might not be good bc always is relative to today.
   def get_top_artists(user, args = {})
     defaults = {
-      user: user.name,
+      user: user.lastfm_name,
       api_key: lastfm_id,
       method: 'user.gettopartists',
       format: 'json',
