@@ -14,10 +14,13 @@ Metrics/LineLength:
 
 Metrics/MethodLength:
   Max: 15
+  Exclude:
+    - db/migrate/*.rb
 
 Metrics/BlockLength:
   ExcludedMethods:
     - describe
     - it
     - configure
+    - change
 

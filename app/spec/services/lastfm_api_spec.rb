@@ -3,7 +3,6 @@ RSpec.describe LastfmApi do
   let(:user) { FactoryGirl.build(:user) }
   let(:api) { LastfmApi.new(user) }
   context '#get_recent_tracks' do
-
     it 'returns a lastfm api response' do
       VCR.use_cassette('lastfm_user.getrecenttracks') do
         expect(api.get_recent_tracks).to be_a Hash

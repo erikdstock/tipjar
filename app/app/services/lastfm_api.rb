@@ -1,10 +1,12 @@
 class LastfmApi < BaseApi
   include TimeTools
-  attr_reader :base
+  attr_reader :base, :lastfm_id, :lastfm_secret
+  BASE = 'http://ws.audioscrobbler.com/2.0/'.freeze
 
   def initialize(user)
-    @base = 'http://ws.audioscrobbler.com/2.0/'
     @user = user
+    @lastfm_id = ENV['LASTFM_ID']
+    @lastfm_secret = ENV['LASTFM_SECRET']
   end
 
   # Paginates through user.getrecenttracks, reducing tracks to artists with track count.
@@ -12,13 +14,12 @@ class LastfmApi < BaseApi
   def top_artists_by_period(from: nil, to: nil, tracks: [], page: 1)
     Rails.logger.debug "getting page #{page}"
     response = get_recent_tracks(limit: 200, from: from, to: to, page: page)
-    tracks = tracks + response['recenttracks']['track']
-    if done_paging?(response, 'recenttracks', page)
+    tracks += response['recenttracks']['track']
+    if done_paging?(response, 'recenttracks')
       return reduce_artists_from_tracks(tracks)
     end
     top_artists_by_period(from: from, to: to, tracks: tracks, page: page + 1)
   end
-
 
   # lastfm user.recenttracks method
   def get_recent_tracks(from: nil, to: nil, page: 1, limit: 200)
@@ -29,7 +30,7 @@ class LastfmApi < BaseApi
       limit: limit
     }
     params = lastfm_params('user.getrecenttracks', query_params)
-    handle_response(RestClient.get(base, params: params))
+    handle_response(RestClient.get(BASE, params: params))
   end
 
   # lastfm user.gettopartists method- takes period as a param
@@ -38,7 +39,7 @@ class LastfmApi < BaseApi
   def get_top_artists(period: '1month')
     query_params = { period: period }
     params = lastfm_params('user.gettopartists', query_params)
-    response = RestClient.get(base, params: params)
+    response = RestClient.get(BASE, params: params)
     handle_response(response)
   end
 
@@ -46,12 +47,12 @@ class LastfmApi < BaseApi
 
   # Restructures artist track_data with counts
   def reduce_artists_from_tracks(tracks)
-    tracks.group_by { |t| t['artist']['#text']}
-      .map { |a, ts| [a, { play_count: ts.length, image: ts.last['image'][1]['#text'] }] }
-      .to_h
+    tracks.group_by { |t| t['artist']['#text'] }
+          .map { |a, ts| [a, { source: 'lastfm', play_count: ts.length, image: ts.last['image'][1]['#text'] }] }
+          .to_h
   end
 
-  def done_paging?(response, method_name, expected_page)
+  def done_paging?(response, method_name)
     meta = response[method_name]['@attr']
     page = meta['page'].to_i
     total_pages = meta['totalPages'].to_i
@@ -65,10 +66,9 @@ class LastfmApi < BaseApi
       api_key: lastfm_id,
       format: 'json',
       user: @user.lastfm_name,
-      method: method,
+      method: method
     }.merge(params.compact)
   end
-
 
   # Handle response. Probably want to easily reach errors, maybe
   # package in meta or error fields since we want to standardize
@@ -84,13 +84,5 @@ class LastfmApi < BaseApi
     else
       return JSON.parse(response)
     end
-  end
-
-  def lastfm_id
-    ENV['LASTFM_ID']
-  end
-
-  def lastfm_secret
-    ENV['LASTFM_SECRET']
   end
 end

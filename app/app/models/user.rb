@@ -22,15 +22,15 @@ class User < ApplicationRecord
   # Get top artists for month
   # @param {Time}
   def top_artists_for_month(time)
-    time_range = time_range_month(time)
-    current_artists = top_artists_for_time(time_range)
+    current_artists = top_artists_for_time(time_range_month(time))
     current_artists
   end
 
   # Update existing monthly_top_artists with new data
-  # TODO: this method needs testing.
-  # @param new_artists [Hash] of values to update/create artists
-  # @param month [Time] time-like object with month
+  # TODO: testing.
+  # TODO: convey api source [lastfm etc]
+  # @param new_artists {Hash} of values to update/create artists
+  # @param month {Time} time-like object with month
   # @return {ActiveRecord Relation} of updated artists or false
   def update_top_artists_for_month(new_artists, month)
     top_artists_for_month(month).delete_all
@@ -46,14 +46,15 @@ class User < ApplicationRecord
     save_collection(new_collection)
   end
 
-  # On create, get top artists for current month and previous month.
+  # On create, get top artists for past 3 calendar months.
   def queue_initial_refresh
-    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 0.months.ago)
-    LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, 1.month.ago)
+    3.times do |num|
+      LastfmUpdateMonthlyTopArtistsWorker.perform_async(id, num.months.ago) if lastfm_authorized?
+    end
   end
 
   def top_artists_for_time(time_range)
-    MonthlyTopArtist.where(user_id: id, month: time_range).includes(:artist)
+    monthly_top_artists.where(month: time_range).includes(:artist)
   end
 
   # TODO: Remove?
@@ -77,6 +78,10 @@ class User < ApplicationRecord
       return false
     end
     true
+  end
+
+  def lastfm_authorized?
+    authentications.map(&:provider).include? 'lastfm'
   end
 
   ### Devise methods

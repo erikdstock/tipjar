@@ -11,7 +11,7 @@ class DashboardController < ApplicationController
         name: artist.artist.name,
         artist_id: artist.artist_id,
         play_count: artist.play_count,
-        image: artist.image,
+        image: artist.artist.image,
         month: artist.month,
         give_to_url: artist.artist.give_to_url,
         give_to_verified: artist.artist.give_to_verified

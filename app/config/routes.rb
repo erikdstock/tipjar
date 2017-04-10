@@ -23,5 +23,15 @@ Rails.application.routes.draw do
     # get 'recent-tracks', to: 'users#recent_tracks', as: :recent_tracks
   end
 
+  require 'sidekiq/web'
+  Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+    # Protect against timing attacks: (https://codahale.com/a-lesson-in-timing-attacks/)
+    # - Use & (do not use &&) so that it doesn't short circuit.
+    # - Use `secure_compare` to stop length information leaking
+    ActiveSupport::SecurityUtils.secure_compare(username, ENV['SIDEKIQ_USERNAME']) &
+      ActiveSupport::SecurityUtils.secure_compare(password, ENV['SIDEKIQ_PASSWORD'])
+  end
+  mount Sidekiq::Web => '/admin/sidekiq'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
