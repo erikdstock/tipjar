@@ -15,6 +15,7 @@ This build uses docker.
 
 ### Progress
   Currently working on the back end, fetching and parsing top artists from lastfm and running jobs to update their data in the background. next step will be fuller integration with the give.to api and views to support it.
+  REACT EH
 
 ### Thanks - sources
 - https://semaphoreci.com/community/tutorials/dockerizing-a-ruby-on-rails-application
