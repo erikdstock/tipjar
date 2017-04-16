@@ -23,10 +23,10 @@ RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   libpq-dev postgresql-client-9.4 --fix-missing --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
-COPY app/Gemfile* ./
+COPY app/Gemfile* app/package.json ./
 
 # Bundle
-RUN echo $BUNDLE_PATH && bundle install
+RUN echo $BUNDLE_PATH && bundle install && yarn install
 
 COPY app .
 
@@ -34,6 +34,6 @@ COPY app .
 # RUN mv $bundle_path/Gemfile.lock ./
 
 # For puma (rails default in script)
-CMD ["rails", "s", "-b", "0.0.0.0"]
+CMD ["foreman", "start"]
 # The default command that gets ran will be to start the Unicorn server. [NOT USING]
 # CMD ["bundle", "exec", "unicorn", "-c", "config/unicorn.rb"]

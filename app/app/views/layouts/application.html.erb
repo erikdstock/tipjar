@@ -6,6 +6,7 @@
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+    <%= javascript_pack_tag 'hello_react' %>
   </head>
 
   <body>
@@ -18,19 +19,7 @@
         <p class="notice"><%= notice %></p>
         <p class="alert"><%= alert %></p>
         <%#%>
-
-        <div id="flash_messages">
-          <% flash.each do |key, value| %>
-            <%= content_tag(:div, value, :class => "flash #{key}") %>
-          <% end %>
-        </div>
-        <div id="error_messages">
-          <% if @errors %>
-            <% @errors.each do |error| %>
-              <%= content_tag(:div, error, :class => "error-message") %>
-            <% end %>
-          <% end %>
-        </div>
+        <%# render partial: 'shared/flash_messages'%>
         <%= yield %>
       </div>
     </div>
