@@ -12,7 +12,3 @@ This build uses docker.
 * With a docker machine or docker for mac active:
   * `docker-compose up` to run the app
   * `docker-compose run app rake` to run tests
-
-### Thanks - sources
-- https://semaphoreci.com/community/tutorials/dockerizing-a-ruby-on-rails-application for heavy inspiration on docker-compose structure
-- https://github.com/eadonj/multiple_oauth_with_devise for approach to multiple account oauths

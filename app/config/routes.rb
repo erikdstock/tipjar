@@ -7,6 +7,11 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks'
   }
+  devise_scope :user do
+    get 'logout', to: 'users/sessions#destroy'
+  end
+
+  # get 'logout', to: 'users/sessions#destroy' # Log out via a GET request
 
   #  # devise_scope :user do
   #  #   get 'sign_in', to: 'users/sessions#new', as: :new_user_session
@@ -16,6 +21,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     get '/', to: 'root#main', as: :root
+    get '/me', to: 'root#me'
     # root 'welcome#index'
     # resources :artists, only: [:index]
     # resources :users

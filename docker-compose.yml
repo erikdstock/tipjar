@@ -19,6 +19,8 @@ services:
       - '3000:3000'
     env_file:
       - .docker.env
+    environment:
+      - DOCKERIZED=true
     stdin_open: true
     tty: true
 

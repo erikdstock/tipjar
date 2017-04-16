@@ -5,6 +5,11 @@ class Api::RootController < ApplicationController
     render json: { 'api status' => :cool }
   end
 
+  def me
+    render json: current_user
+  end
+
+
   private
 
   def authenticate

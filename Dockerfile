@@ -30,10 +30,7 @@ RUN echo $BUNDLE_PATH && bundle install && yarn install
 
 COPY app .
 
-# Unclobber the updated gemfile.lock
-# RUN mv $bundle_path/Gemfile.lock ./
-
-# For puma (rails default in script)
+# For puma in development mode [+ webpack task]
 CMD ["foreman", "start"]
 # The default command that gets ran will be to start the Unicorn server. [NOT USING]
 # CMD ["bundle", "exec", "unicorn", "-c", "config/unicorn.rb"]

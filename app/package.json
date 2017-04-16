@@ -1,5 +1,5 @@
 {
-  "name": "src",
+  "name": "tipjar",
   "private": true,
   "dependencies": {
     "react": "^15.5.4",

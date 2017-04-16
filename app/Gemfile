@@ -36,7 +36,7 @@ gem 'sidekiq'
 gem 'sidekiq-throttler'
 
 gem 'devise'
-gem 'devise-jwt', '~> 0.1.1'
+gem 'devise-jwt', '~> 0.2.1'
 gem 'omniauth-lastfm', '~>0.0.7' # Lastfm omniauth
 # gem 'oauth' # I dont think this is needed.
 

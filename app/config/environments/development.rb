@@ -1,4 +1,8 @@
 Rails.application.configure do
+    # Check if we use Docker to allow docker ip through web-console
+  if ENV['DOCKERIZED'] == 'true'
+    config.web_console.whitelisted_ips = ENV['DOCKER_HOST_IP']
+  end
   # Make javascript_pack_tag load assets from webpack-dev-server.
   # config.x.webpacker[:dev_server_host] = "http://localhost:8080"
 
