@@ -9,10 +9,16 @@ class Api::RootController < ApplicationController
     render json: current_user
   end
 
+  def req
+    render json: request.env
+  end
 
   private
 
   def authenticate
-    render status: :unauthorized unless user_signed_in?
+    unless user_signed_in?
+      payload = { error: 'You are not signed in' }
+      render  status: :unauthorized, json: payload
+    end
   end
 end

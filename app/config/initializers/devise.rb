@@ -3,6 +3,10 @@
 Devise.setup do |config|
   config.jwt do |jwt|
     jwt.secret = ENV['JWT_SECRET']
+    jwt.dispatch_requests = [
+      ['GET', %r{^/dashboard$}],
+      ['GET', %r{^/api/me$}]
+    ]
   end
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing

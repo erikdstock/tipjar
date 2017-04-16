@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json } do
     get '/', to: 'root#main', as: :root
     get '/me', to: 'root#me'
+    get '/req', to: 'root#req'
     # root 'welcome#index'
     # resources :artists, only: [:index]
     # resources :users
