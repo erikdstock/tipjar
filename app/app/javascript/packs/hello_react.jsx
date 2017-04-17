@@ -5,8 +5,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
-import foo from '../store/foo'
-console.log(foo)
 
 const Hello = props => (
   <div>Hello {props.name}!</div>

@@ -1,17 +1,25 @@
 import 'babel-polyfill'
 import React from 'react'
-import createBrowserHistory from 'history/createBrowserHistory'
-import routes from './routes'
-import { Router } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
+import App from 'components/App'
 import { render } from 'react-dom'
-const history = createBrowserHistory()
+import { Provider } from 'react-redux';
+import configureStore from './store/configureStore'
 
-console.log(routes)
-console.log(history)
+const store = configureStore()
 
 document.addEventListener('DOMContentLoaded', () => {
   render(
-    <Router history={history} routes={routes}/>,
+    <Provider store={store}>
+      <BrowserRouter
+        // basename={optionalString}
+        // forceRefresh={optionalBool}
+        // getUserConfirmation={optionalFunc}
+        // keyLength={optionalNumber}
+      >
+        <App/>
+      </BrowserRouter>
+    </Provider>,
     document.getElementById('app')
   )
 })
