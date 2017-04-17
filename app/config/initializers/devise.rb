@@ -3,6 +3,7 @@
 Devise.setup do |config|
   config.jwt do |jwt|
     jwt.secret = ENV['JWT_SECRET']
+    # When to send a jwt auth header back w/ response
     jwt.dispatch_requests = [
       ['GET', %r{^/dashboard$}],
       ['GET', %r{^/api/me$}]

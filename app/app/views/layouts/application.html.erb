@@ -6,20 +6,12 @@
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
-    <%= javascript_pack_tag 'hello_react' %>
+    <%= javascript_pack_tag 'application' %>
   </head>
 
   <body>
-    <div class='page'>
-      <header>
-        <%= render (@user ? 'shared/user_controls' : 'shared/oauth') %>
-      </header>
-      <div class='content'>
-        <%#recommended by devise maybe remove? %>
-        <p class="notice"><%= notice %></p>
-        <p class="alert"><%= alert %></p>
-        <%#%>
-        <%# render partial: 'shared/flash_messages'%>
+    <div id='app'>
+      <div class='html-content'>
         <%= yield %>
       </div>
     </div>

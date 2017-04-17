@@ -2,5 +2,6 @@
 {
     "ruby.lint": {
     "rubocop": true
-  }
+  },
+  "eslint.enable": true
 }
