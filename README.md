@@ -7,7 +7,7 @@ Favorite Musician Processor.
 Tip bands you love since you don't pay for music any more.
 
 ## Build and run
-This build uses docker.
+This build uses docker. It's easy.
 * copy .docker.env.example to .docker.env and fill in the values
 * With a docker machine or docker for mac active:
   * `docker-compose up` to run the app
