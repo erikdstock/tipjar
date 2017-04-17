@@ -1,10 +1,17 @@
 import 'babel-polyfill'
 import React from 'react'
-import { render } from 'react-dom'
-import { Router, browserHistory } from 'react-router'
+import createBrowserHistory from 'history/createBrowserHistory'
 import routes from './routes'
+import { Router } from 'react-router-dom'
+import { render } from 'react-dom'
+const history = createBrowserHistory()
 
-render(
- <Router history={browserHistory} routes={routes} />,
- document.getElementById('app')
-)
+console.log(routes)
+console.log(history)
+
+document.addEventListener('DOMContentLoaded', () => {
+  render(
+    <Router history={history} routes={routes}/>,
+    document.getElementById('app')
+  )
+})

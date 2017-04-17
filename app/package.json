@@ -3,10 +3,13 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "history": "^4.6.1",
+    "prop-types": "^15.5.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",
     "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1",
     "redux": "^3.6.0"
   },
   "devDependencies": {
@@ -17,7 +20,12 @@
     "coffee-loader": "^0.7.3",
     "coffee-script": "^1.12.5",
     "compression-webpack-plugin": "^0.4.0",
+    "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "glob": "^7.1.1",
     "path-complete-extname": "^0.1.0",
     "rails-erb-loader": "^5.0.0",

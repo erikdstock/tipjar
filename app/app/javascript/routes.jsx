@@ -1,10 +1,10 @@
-import React from 'react'
-import { Route, IndexRoute } from 'react-router'
-import App from 'components/App'
-import DashboardPage from 'components/DashboardPage'
-import LoginPage from 'components/LoginPage'
+import React from 'react' 
+import { Route, IndexRoute } from 'react-router-dom'
+import App from './components/App'
+import DashboardPage from './components/DashboardPage'
+import LoginPage from './components/LoginPage'
 
-export default (
+const routes = ( // something is not quite working here...
   <Route path="/" component={App}>
     <IndexRoute component={DashboardPage} onEnter={requireAuth} />
     <Route path="/login" component={LoginPage} />
@@ -21,3 +21,5 @@ function requireAuth (nextState, replace) {
     })
   }
 }
+
+export default routes

@@ -3,23 +3,26 @@
 // of the page.
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
+import foo from '../store/foo'
+console.log(foo)
 
 const Hello = props => (
   <div>Hello {props.name}!</div>
 )
 
-Hello.defaultProps = {
-  name: 'David'
-}
+// Hello.defaultProps = {
+//   name: 'David'
+// }
 
-Hello.propTypes = {
-  name: React.PropTypes.string
-}
+// Hello.propTypes = {
+//   name: React.PropTypes.string
+// }
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(
-    <Hello name="React" />,
-    document.body.appendChild(document.createElement('div')),
-  )
-})
+// document.addEventListener('DOMContentLoaded', () => {
+//   ReactDOM.render(
+//     <Hello name="React" />,
+//     document.body.appendChild(document.createElement('div')),
+//   )
+// })
