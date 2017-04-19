@@ -1,24 +1,16 @@
 import 'babel-polyfill'
+import AppRouter from './AppRouter'
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import App from 'components/App'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux';
 import configureStore from './store/configureStore'
+import { Provider } from 'react-redux'
+import { render } from 'react-dom'
 
 const store = configureStore()
 
 document.addEventListener('DOMContentLoaded', () => {
   render(
     <Provider store={store}>
-      <BrowserRouter
-        // basename={optionalString}
-        // forceRefresh={optionalBool}
-        // getUserConfirmation={optionalFunc}
-        // keyLength={optionalNumber}
-      >
-        <App/>
-      </BrowserRouter>
+      <AppRouter />
     </Provider>,
     document.getElementById('app')
   )
