@@ -20,16 +20,12 @@ module Users
 
     def lastfm
       omni = request.env['omniauth.auth']
-      p omni
       authentication = Authentication.find_by(provider: omni['provider'], uid: omni['uid'])
       if authentication
-        p 'Wubba'
         sign_in_user(authentication)
       elsif current_user
-        p 'Lubba'
         add_new_oauth(authentication, omni)
       else
-        p 'Dub Dub'
         create_new_user(omni)
       end
     end

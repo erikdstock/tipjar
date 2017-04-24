@@ -5,7 +5,7 @@ import configureStore from './store/configureStore'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 
-const store = configureStore()
+const store = configureStore(window.__INITIAL_STATE__)
 
 document.addEventListener('DOMContentLoaded', () => {
   render(

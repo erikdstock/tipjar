@@ -6,10 +6,6 @@ const DashboardPage = props => (
   <div>Dashboard Page</div>
 )
 
-DashboardPage.defaultProps = {
-  name: 'David'
-}
-
 DashboardPage.propTypes = {
   name: PropTypes.string
 }

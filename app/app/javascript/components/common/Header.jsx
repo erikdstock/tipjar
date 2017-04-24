@@ -19,7 +19,7 @@ Header.propTypes = {
 }
 
 function mapStateToProps (state, ownProps) {
-  return {logged_in: state.session}
+  return {logged_in: state.session} // placeholder
 }
 
 export default connect(mapStateToProps)(Header)

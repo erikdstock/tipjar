@@ -5,11 +5,6 @@ import DashboardPage from './components/DashboardPage'
 import LoginPage from './components/LoginPage'
 import Header from './components/common/Header'
 
-console.log(Header)
-console.log(LoginPage)
-console.log(DashboardPage)
-
-const loggedIn = false
 
 const router = () => (
   <BrowserRouter
@@ -27,11 +22,16 @@ const router = () => (
       )}/>
       <Route path="/login" component={LoginPage}/>
       <Route path="/dashboard" component={DashboardPage}/>
+      <Route path="/oauth" component={OauthRedirect} />
     </div>
   </BrowserRouter>
 )
+//TODO: Figure out if the router needs to connect() or every container component does
+function mapStateToProps(state, ownProps) {
 
-export default router
+} 
+
+export default connect(mapStateToProps)(router)
 
 
 
