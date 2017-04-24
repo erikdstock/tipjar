@@ -6,8 +6,6 @@ import LoginPage from './components/LoginPage'
 import Header from './components/common/Header'
 import { connect } from 'react-redux'
 
-const loggedIn = false
-
 const router = () => (
   <BrowserRouter
     // basename={optionalString}
@@ -18,7 +16,7 @@ const router = () => (
     <div>
       <Header />
       <Route exact path="/" render={() => (
-        loggedIn ?
+        this.props.jwt ?
         <Redirect to="/dashboard" /> :
         <Redirect to="/login" />
       )}/>
@@ -29,7 +27,7 @@ const router = () => (
 )
 //TODO: Figure out if the router needs to connect() or every container component does
 function mapStateToProps (state, ownProps) {
-    return {}
+    return {jwt: state.jwt}
 }
 
 export default connect(mapStateToProps)(router)
