@@ -7,23 +7,15 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks' #TODO: wind this into api endpoint or remove devise
   }
+
   devise_scope :user do
     get 'logout', to: 'users/sessions#destroy'
   end
-
-  # get 'logout', to: 'users/sessions#destroy' # Log out via a GET request
-
-  #  # devise_scope :user do
-  #  #   get 'sign_in', to: 'users/sessions#new', as: :new_user_session
-  #  #   post 'sign_in' => 'users/sessions#create', :as => :user_session
-  #  #   get 'sign_out', to: 'users/sessions#destroy', as: :destroy_user_session
-  #  # end
 
   namespace :api, defaults: { format: :json } do
     get '/', to: 'root#main', as: :root
     get '/me', to: 'root#me'
     get '/req', to: 'root#req'
-    get '/omniauth_lastfm', to: "omniauth_callbacks#lastfm"
   end
 
   require 'sidekiq/web'

@@ -4,6 +4,7 @@ Rails:
 Style/Documentation:
   Enabled: False
 AllCops:
+  TargetRubyVersion: '2.3.1'
   Exclude:
     - db/schema.rb
     - bin/**/*

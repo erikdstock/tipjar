@@ -11,7 +11,7 @@ module Concerns
       token_secret = omni['credentials'].secret
       current_user.authentications.create!(provider: omni['provider'], uid: omni['uid'],
                                            token: token, token_secret: token_secret)
-      sign_in_and_redirect current_user
+      current_user
     end
 
     def create_new_user(omni)
@@ -20,16 +20,11 @@ module Concerns
       user.apply_omniauth(omni)
       user.email = omni['extra']['raw_info'].email
       user.lastfm_name = omni['extra']['raw_info'].name
-      if user.save
-        sign_in_and_redirect user
-      else
-        p user.errors.full_messages
-        redirect_to new_user_registration_path
-      end
+      user.save && user || raise(user.errors.full_messages)
     end
 
     def after_sign_in_path_for(_user)
-      user_dashboard_path
+      root_path
     end
   end
 end

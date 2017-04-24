@@ -1,6 +1,19 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
+  # a before_action for non-api routes
+  def load_initial_data
+    @initial_data = {
+      jwt: current_user&.jwt,              # Not sure current_user is set yet but we'll see
+      api_path: ENV['API_ROOT']            # Root for react to talk to
+    }
+  end
+
+
+  def initial_data
+    @initial_data ||= load_initial_data
+  end
+
   def format_month_year(time)
     time.strftime '%B %Y'
   end
