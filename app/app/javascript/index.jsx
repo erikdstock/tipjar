@@ -7,7 +7,9 @@ import { render } from 'react-dom'
 
 document.addEventListener('DOMContentLoaded', () => {
   const store = configureStore(window.__INITIAL_DATA__)
-  localStorage.jwt = window.__INITIAL_DATA__.user && window.__INITIAL_DATA__.user.jwt
+  if (window.__INITIAL_DATA__.user && window.__INITIAL_DATA__.user.jwt) {
+    localStorage.jwt = window.__INITIAL_DATA__.user.jwt
+  }
   render(
     <Provider store={store}>
       <AppRouter />

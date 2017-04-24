@@ -15,7 +15,7 @@ const LoginPage = props => (
 //   name: PropTypes.string
 // }
 function mapStateToProps (state, ownProps) {
-    return state
+    return {lastfmUrl: state.LASTFM_AUTH_URL }
 }
 
 export default connect(mapStateToProps)(LoginPage)
