@@ -2,13 +2,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # a before_action for non-api routes
-  def load_initial_data
+  def load_initial_data(data = {})
     @initial_data = {
-      jwt: current_user&.jwt,              # Not sure current_user is set yet but we'll see
-      api_path: ENV['API_ROOT']            # Root for react to talk to
-    }
+      api_path: ENV['API_ROOT'],            # Root for react to talk to
+      lastfm_oauth_url: external_facing_lastfm_callback_path,
+    }.merge(data)
   end
 
+  def external_facing_lastfm_callback_path
+    "https://last.fm/api/auth?api_key=#{ENV['LASTFM_ID']}&cb=#{ENV['API_ROOT'] + user_lastfm_omniauth_callback_path}"
+  end
 
   def initial_data
     @initial_data ||= load_initial_data

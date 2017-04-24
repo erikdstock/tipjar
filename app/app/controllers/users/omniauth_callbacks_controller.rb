@@ -17,7 +17,8 @@
         user = create_new_user(omni)
       end
 
-      initial_data[:jwt] = user.jwt
+      # Redirect with the jwt header
+      redirect_to root_path, 'Authorization' => "Bearer #{user.jwt}"
      end
 
     #  def lastfm_old

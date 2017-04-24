@@ -5,9 +5,9 @@ import configureStore from './store/configureStore'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 
-const store = configureStore(window.__INITIAL_STATE__)
-
 document.addEventListener('DOMContentLoaded', () => {
+  const store = configureStore(window.__INITIAL_DATA__)
+  localStorage.jwt = window.__INITIAL_DATA__.user && window.__INITIAL_DATA__.user.jwt
   render(
     <Provider store={store}>
       <AppRouter />

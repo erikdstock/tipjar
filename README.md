@@ -10,5 +10,8 @@ Tip bands you love since you don't pay for music any more.
 This build uses docker.
 * copy .docker.env.example to .docker.env and fill in the values
 * With a docker machine or docker for mac active:
+  * `docker-compose build`
+  * `docker-compose run app rails db:setup` to initialize development databases
+  * `docker-compose run app yarn:install` to set up development dependencies
   * `docker-compose up` to run the app
   * `docker-compose run app rake` to run tests

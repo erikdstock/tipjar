@@ -16,7 +16,7 @@ const router = () => (
     <div>
       <Header />
       <Route exact path="/" render={() => (
-        this.props.jwt ?
+        localStorage.jwt ?
         <Redirect to="/dashboard" /> :
         <Redirect to="/login" />
       )}/>
@@ -25,13 +25,8 @@ const router = () => (
     </div>
   </BrowserRouter>
 )
-//TODO: Figure out if the router needs to connect() or every container component does
-function mapStateToProps (state, ownProps) {
-    return {jwt: state.jwt}
-}
 
-export default connect(mapStateToProps)(router)
-
+export default router
 // function requireAuth (nextState, replace) {
 //   if (!sessionStorage.jwt) {
 //     replace({

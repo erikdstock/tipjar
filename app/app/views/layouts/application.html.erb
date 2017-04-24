@@ -3,16 +3,16 @@
   <head>
     <title>Tipjar.ly.io.maga</title>
     <%= csrf_meta_tags %>
-    <script>
-      // load initial data from the app
-      __INITIAL_DATA__ = <%= @initial_data || {} %>
-    </script>
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= javascript_pack_tag 'application' %>
   </head>
 
   <body>
+    <script>
+      // load initial data from the app
+      __INITIAL_DATA__ = <%= (@initial_data || {}).to_json.html_safe %>
+    </script>
     <div id='app'>
       <div class='html-content'>
         <%= yield %>

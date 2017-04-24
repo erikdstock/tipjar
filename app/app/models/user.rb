@@ -22,6 +22,10 @@ class User < ApplicationRecord
   # :lockable,               # lock account after failed signin attempts
   # :timeoutable,            # expires sessions that have not been active in a specified period of time.
 
+  def as_json
+    super.merge(jwt: jwt)
+  end
+
   def jwt
     Warden::JWTAuth::UserEncoder.new.call(self, {})
   end
