@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     registrations: 'users/registrations',
     sessions: 'users/sessions',
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    omniauth_callbacks: 'users/omniauth_callbacks' #TODO: wind this into api endpoint or remove devise
   }
   devise_scope :user do
     get 'logout', to: 'users/sessions#destroy'
@@ -23,11 +23,7 @@ Rails.application.routes.draw do
     get '/', to: 'root#main', as: :root
     get '/me', to: 'root#me'
     get '/req', to: 'root#req'
-    # root 'welcome#index'
-    # resources :artists, only: [:index]
-    # resources :users
-    # get 'top-artists', to: 'users#top_artists', as: :top_artists
-    # get 'recent-tracks', to: 'users#recent_tracks', as: :recent_tracks
+    get '/omniauth_lastfm', to: "omniauth_callbacks#lastfm"
   end
 
   require 'sidekiq/web'

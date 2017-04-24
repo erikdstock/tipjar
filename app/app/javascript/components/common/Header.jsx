@@ -15,11 +15,11 @@ class Header extends React.Component {
 }
 
 Header.propTypes = {
-  actions: PropTypes.object.isRequired
+  // actions: PropTypes.object.isRequired
 }
 
 function mapStateToProps (state, ownProps) {
-  return {logged_in: state.session} // placeholder
+  // return {logged_in: state.session} // placeholder
 }
 
 export default connect(mapStateToProps)(Header)
