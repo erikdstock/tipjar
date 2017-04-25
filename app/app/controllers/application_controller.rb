@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
     @initial_data = {
       constants: {
         API_PATH: ENV['API_ROOT'],            # Root for react to talk to
-        LASTFM_AUTH_URL: lastfm_callback_path,
+        LASTFM_AUTH_URL: user_lastfm_omniauth_authorize_path,
       },
       session: {},
       user: {},
