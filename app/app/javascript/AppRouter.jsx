@@ -1,12 +1,12 @@
 import React from 'react'
 import { BrowserRouter, Route, Redirect } from 'react-router-dom'
-// import App from './components/App'
+import PropTypes from 'prop-types'
 import DashboardPage from './components/DashboardPage'
 import LoginPage from './components/LoginPage'
 import Header from './components/common/Header'
 import { connect } from 'react-redux'
 
-const router = () => (
+const AppRouter = (props) => (
   <BrowserRouter
     // basename={optionalString}
     // forceRefresh={optionalBool}
@@ -15,8 +15,8 @@ const router = () => (
   >
     <div>
       <Header />
-      <Route exact path="/" render={() => (
-        localStorage.jwt ?
+      <Route exact path="/" loggedIn={props.loggedIn} render={() => (
+        props.loggedIn ?
         <Redirect to="/dashboard" /> :
         <Redirect to="/login" />
       )}/>
@@ -26,7 +26,16 @@ const router = () => (
   </BrowserRouter>
 )
 
-export default router
+AppRouter.propTypes = {
+  loggedIn: PropTypes.bool.isRequired
+}
+
+function mapStateToProps (state, ownProps) {
+  return { loggedIn: !!state.jwt }
+}
+
+export default connect(mapStateToProps)(AppRouter)
+
 // function requireAuth (nextState, replace) {
 //   if (!sessionStorage.jwt) {
 //     replace({

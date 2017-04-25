@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 class Header extends React.Component {
   render () {
-    if (this.props.user) {
+    if (this.props.loggedIn) {
       return (
         <h1> you are logged in</h1>
       )
@@ -19,7 +19,7 @@ Header.propTypes = {
 }
 
 function mapStateToProps (state, ownProps) {
-  return state
+  return Object.assign({}, { loggedIn: !!state.jwt, user: state.user, constants: state.constants }, ownProps)
 }
 
 export default connect(mapStateToProps)(Header)

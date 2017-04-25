@@ -1,9 +1,13 @@
-import {combineReducers} from 'redux';  
-import cats from './exampleReducer';
+import { combineReducers } from 'redux'
+import sessionReducer from './sessionReducer'
+// import userReducer from './userReducer'
+// import artistDataReducer from './artistDataReducer'
 
-const rootReducer = combineReducers({  
-  // short hand property names
-  cats
+const rootReducer = combineReducers({
+  constants: (constants={}) => constants,
+  user: (user={}) => user,
+  session: sessionReducer,
+  artistData: (data={}) => data
 })
 
-export default rootReducer;
+export default rootReducer

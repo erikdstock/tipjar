@@ -4,12 +4,17 @@ class ApplicationController < ActionController::Base
   # a before_action for non-api routes
   def load_initial_data(data = {})
     @initial_data = {
-      API_PATH: ENV['API_ROOT'],            # Root for react to talk to
-      LASTFM_AUTH_URL: external_facing_lastfm_callback_path,
+      constants: {
+        API_PATH: ENV['API_ROOT'],            # Root for react to talk to
+        LASTFM_AUTH_URL: lastfm_callback_path,
+      },
+      session: {},
+      user: {},
+      artistData: {}
     }.merge(data)
   end
 
-  def external_facing_lastfm_callback_path
+  def lastfm_callback_path
     "https://last.fm/api/auth?api_key=#{ENV['LASTFM_ID']}&cb=#{ENV['API_ROOT'] + user_lastfm_omniauth_callback_path}"
   end
 
