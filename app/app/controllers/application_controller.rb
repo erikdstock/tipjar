@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
   def load_initial_data(data = {})
     @initial_data = {
       constants: {
-        API_PATH: ENV['API_ROOT'],            # Root for react to talk to
-        LASTFM_AUTH_URL: user_lastfm_omniauth_authorize_path,
+        API_PATH: ENV['APP_ROOT'],            # Root for react to talk to
+        LASTFM_AUTH_URL: lastfm_callback_path,
       },
       session: {},
       user: {},
@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def lastfm_callback_path
-    "https://last.fm/api/auth?api_key=#{ENV['LASTFM_ID']}&cb=#{ENV['API_ROOT'] + user_lastfm_omniauth_callback_path}"
+    %Q(https://last.fm/api/auth?api_key=#{ENV['LASTFM_ID']}&cb=#{ENV['APP_ROOT'] + user_lastfm_omniauth_callback_path})
   end
 
   def initial_data
