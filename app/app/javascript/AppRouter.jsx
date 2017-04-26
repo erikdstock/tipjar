@@ -14,7 +14,7 @@ const AppRouter = (props) => (
     // keyLength={optionalNumber}
   >
     <div>
-      <Header />
+      <Header loggedIn={props.loggedIn} />
       <Route path="/" render={() => (
         props.loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
       )} />
