@@ -27,6 +27,6 @@ Rails.application.routes.draw do
   end
   mount Sidekiq::Web => '/admin/sidekiq'
 
-  # get '*path', to: 'dashboard#main', as: :bootstrap # otherwise fall back to bootstrapping react app
+  get '*path', to: 'dashboard#main', as: :bootstrap # otherwise fall back to bootstrapping react app
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

@@ -19,7 +19,7 @@ Header.propTypes = {
 }
 
 function mapStateToProps (state, ownProps) {
-  return Object.assign({}, { loggedIn: !!state.jwt, user: state.user, constants: state.constants }, ownProps)
+  return Object.assign({}, { loggedIn: !!state.session.jwt, user: state.user, constants: state.constants }, ownProps)
 }
 
 export default connect(mapStateToProps)(Header)

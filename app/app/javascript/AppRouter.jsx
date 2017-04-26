@@ -15,11 +15,9 @@ const AppRouter = (props) => (
   >
     <div>
       <Header />
-      <Route exact path="/" loggedIn={props.loggedIn} render={() => (
-        props.loggedIn ?
-        <Redirect to="/dashboard" /> :
-        <Redirect to="/login" />
-      )}/>
+      <Route path="/" render={() => (
+        props.loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
+      )} />
       <Route path="/login" component={LoginPage}/>
       <Route path="/dashboard" component={DashboardPage}/>
     </div>
@@ -31,7 +29,9 @@ AppRouter.propTypes = {
 }
 
 function mapStateToProps (state, ownProps) {
-  return { loggedIn: !!state.jwt }
+  // debugger
+  // setTimeout(() => console.log(state), 50)
+  return Object.assign({}, ownProps, { loggedIn: !!state.session.jwt })
 }
 
 export default connect(mapStateToProps)(AppRouter)

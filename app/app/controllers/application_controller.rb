@@ -3,11 +3,11 @@ class ApplicationController < ActionController::Base
 
   # a before_action for non-api routes
   def load_initial_data(data = {})
-    @initial_data = {
+    p @initial_data = {
       constants: {
         
         API_PATH: ENV['APP_ROOT'],            # Root for react to talk to
-        LASTFM_AUTH_URL: lastfm_auth_path,
+        LASTFM_AUTH_URL: user_lastfm_omniauth_authorize_path,
       },
       session: {},
       user: {},

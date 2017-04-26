@@ -16,9 +16,8 @@
       else
         user = create_new_user(omni)
       end
-
-      # Redirect with the jwt header
-      redirect_to root_path, 'Authorization' => "Bearer #{user.jwt}"
+      load_initial_data(user: user, session: {jwt: user.jwt})
+      render template: 'dashboard/main'
      end
 
      def spotify
