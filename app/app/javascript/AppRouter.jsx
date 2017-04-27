@@ -14,9 +14,9 @@ const AppRouter = (props) => (
     // keyLength={optionalNumber}
   >
     <div>
-      <Header loggedIn={props.loggedIn} />
+      <Header loggedIn={props.jwt} />
       <Route path="/" render={() => (
-        props.loggedIn ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
+        updateLoginCreds(props.jwt) ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
       )} />
       <Route path="/login" component={LoginPage}/>
       <Route path="/dashboard" component={DashboardPage}/>
@@ -31,10 +31,17 @@ AppRouter.propTypes = {
 function mapStateToProps (state, ownProps) {
   // debugger
   // setTimeout(() => console.log(state), 50)
-  return Object.assign({}, ownProps, { loggedIn: !!state.session.jwt })
+  return Object.assign({}, ownProps, { jwt: state.session.jwt })
 }
 
 export default connect(mapStateToProps)(AppRouter)
+
+// Set session storage to the store's jwt or use an existing one
+// ... TODO: Recognize expired/rejected tokens
+function updateLoginCreds(jwt) {
+  if (jwt) return sessionStorage.jwt = jwt
+  return sessionStorage.jwt
+}
 
 // function requireAuth (nextState, replace) {
 //   if (!sessionStorage.jwt) {
