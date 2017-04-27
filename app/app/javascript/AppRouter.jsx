@@ -14,7 +14,7 @@ const AppRouter = (props) => (
     // keyLength={optionalNumber}
   >
     <div>
-      <Header loggedIn={props.jwt} />
+      <Header />
       <Route path="/" render={() => (
         updateLoginCreds(props.jwt) ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
       )} />
@@ -25,7 +25,7 @@ const AppRouter = (props) => (
 )
 
 AppRouter.propTypes = {
-  loggedIn: PropTypes.bool.isRequired
+  jwt: PropTypes.string
 }
 
 function mapStateToProps (state, ownProps) {
@@ -43,50 +43,56 @@ function updateLoginCreds(jwt) {
   return sessionStorage.jwt
 }
 
-// function requireAuth (nextState, replace) {
-//   if (!sessionStorage.jwt) {
-//     replace({
-//       pathname: '/login',
-//       state: { nextPathname: nextState.location.pathname }
-//     })
-//   }
-// }
 
-// const PrivateRoute = ({ component: Component, ...rest }) => (
-//   <Route {...rest} render={props => (
-//     sessionStorage.jwt ? (
-//       <Component {...props}/>
-//     ) : (
-//       <Redirect to={{
-//         pathname: '/login',
-//         state: { from: props.location }
-//       }}/>
-//     )
-//   )}/>
-// )
 
-// // wrap <Route> and use this everywhere instead, then when
-// // sub routes are added to any route it'll work
-// const RouteWithSubRoutes = (route) => (
-//   <Route path={route.path} render={props => (
-//     // pass the sub-routes down to keep nesting
-//     <route.component {...props} routes={route.routes}/>
-//   )}/>
-// )
 
-// const AppRouter = () => (
-//   <Router>
-//     <div>
-//       <ul>
-//         <li><Link to="/tacos">Tacos</Link></li>
-//         <li><Link to="/sandwiches">Sandwiches</Link></li>
-//       </ul>
 
-//       {routes.map((route, i) => (
-//         <RouteWithSubRoutes key={i} {...route}/>
-//       ))}
-//     </div>
-//   </Router>
-// )
+/* Private routing example... Delete this someday.
 
-// export default AppRouter
+
+function requireAuth (nextState, replace) {
+   if (!sessionStorage.jwt) {
+     replace({
+       pathname: '/login',
+       state: { nextPathname: nextState.location.pathname }
+     })
+   }
+ }
+
+ const PrivateRoute = ({ component: Component, ...rest }) => (
+   <Route {...rest} render={props => (
+     sessionStorage.jwt ? (
+       <Component {...props}/>
+     ) : (
+       <Redirect to={{
+         pathname: '/login',
+         state: { from: props.location }
+       }}/>
+     )
+   )}/>
+ )
+
+ // wrap <Route> and use this everywhere instead, then when
+ // sub routes are added to any route it'll work
+ const RouteWithSubRoutes = (route) => (
+   <Route path={route.path} render={props => (
+     // pass the sub-routes down to keep nesting
+     <route.component {...props} routes={route.routes}/>
+   )}/>
+ )
+
+ const AppRouter = () => (
+   <Router>
+     <div>
+       <ul>
+         <li><Link to="/tacos">Tacos</Link></li>
+         <li><Link to="/sandwiches">Sandwiches</Link></li>
+       </ul>
+
+       {routes.map((route, i) => (
+         <RouteWithSubRoutes key={i} {...route}/>
+       ))}
+     </div>
+   </Router>
+ )
+*/
