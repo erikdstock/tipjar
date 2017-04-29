@@ -44,18 +44,24 @@
     "webpack-merge": "^4.1.0"
   },
   "jest": {
-    "roots": [
-      "<rootDir>/app/javascript"
-    ],
-    "testRegex": "\\.(test|spec)\\.(ts|tsx|js|jsx)$",
-    "moduleFileExtensions": [
-      "js",
-      "jsx"
-    ]
+    "roots": [ "<rootDir>/app/javascript" ],
+    "modulePaths": [ "<rootDir>/app/javascript" ],
+    "moduleFileExtensions": ["js", "jsx"],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__test__/mocks/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/__test__/mocks/styleMock.js"
+    }
   },
   "standard": {
     "globals": [
-      "test",
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "xit",
       "expect"
     ]
   }
