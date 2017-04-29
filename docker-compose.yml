@@ -13,7 +13,7 @@ services:
       - postgres
       - redis
     volumes:
-      - ./app:/src
+      - ./src:/src
       - groupy-gemcache:/usr/local/bundle
     ports:
       - '3000:3000'
@@ -33,7 +33,7 @@ services:
       - postgres
       - redis
     volumes:
-      - ./app:/src
+      - ./src:/src
       - groupy-gemcache:/usr/local/bundle
     env_file:
       - .docker.env

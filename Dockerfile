@@ -23,12 +23,12 @@ RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
   libpq-dev postgresql-client-9.4 --fix-missing --no-install-recommends && \
   rm -rf /var/lib/apt/lists/*
 
-COPY app/Gemfile* app/package.json ./
+COPY src/Gemfile* src/package.json ./
 
 # Bundle
 RUN echo $BUNDLE_PATH && bundle install && yarn install
 
-COPY app .
+COPY src .
 
 # For puma in development mode [+ webpack task]
 CMD ["foreman", "start"]
