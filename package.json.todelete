@@ -1,0 +1,32 @@
+{
+  "name": "tipjar-docker-root",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "integration": "jest && rails spec"
+  },
+  "jest": {
+    "rootDir": "src/",
+    "roots": [
+      "<rootDir>/app/javascript"
+    ],
+    "testRegex": "\\.(test|spec)\\.(ts|tsx|js|jsx)$",
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ]
+  },
+"standard": {
+    "globals": [
+      "describe",
+      "context",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it",
+      "expect"
+    ]
+  }
+}

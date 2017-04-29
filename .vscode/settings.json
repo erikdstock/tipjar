@@ -1,6 +1,22 @@
 {
   "eslint.enable": false,
   "standard.enable": true,
+  "standard.options": {
+      "globals": [
+        "describe",
+        "context",
+        "before",
+        "beforeEach",
+        "after",
+        "afterEach",
+        "it",
+        "xit",
+        "expect"
+      ],
+      "ignore": [
+          "src/node_modules/**"
+      ]
+  },
   "jest.pathToJest": "app/node_modules/.bin/jest",
   "jest.pathToConfig": "app/package.json"
 }

@@ -1,26 +1,26 @@
 import $ from 'teaspoon'
-import Header from 'components/common/Header'
 import sinon from 'sinon'
-// import { saleFixture } from '__test__/helpers/fixtures'
+import Header from 'components/common/Header'
+import { userFixture } from '__test__/helpers/fixtures'
 
 describe('Header', () => {
   let props
 
   beforeEach(() => {
     props = {
-      sale: saleFixture(),
+      sale: userFixture(),
       onRegisterToBid: sinon.stub()
     }
   })
 
   it('displays the right message', () => {
     expect(
-      $(RegisterButton(null, context))
+      $(Header(props))
         .text()
-      ).toMatch('Register to bid')
+      ).toMatch('Log In')
   })
 
-  it('calls onRegisterToBid when clicked', () => {
+  xit('calls onRegisterToBid when clicked', () => {
     expect(context.onRegisterToBid.callCount).toEqual(0)
     const node = $(RegisterButton(null, context)).find('a').unwrap()
     node.props.onClick()
