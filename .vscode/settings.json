@@ -1,7 +1,6 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    "ruby.lint": {
-    "rubocop": true
-  },
-  "eslint.enable": true
+  "eslint.enable": false,
+  "standard.enable": true,
+  "jest.pathToJest": "app/node_modules/.bin/jest",
+  "jest.pathToConfig": "app/package.json"
 }

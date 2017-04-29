@@ -7,6 +7,7 @@ import { render } from 'react-dom'
 
 document.addEventListener('DOMContentLoaded', () => {
   const store = configureStore(window.__INITIAL_DATA__)
+
   render(
     <Provider store={store}>
       <AppRouter />

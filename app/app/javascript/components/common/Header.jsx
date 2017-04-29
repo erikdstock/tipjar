@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-
+import { Redirect } from 'react-router'
+import { deleteSessionJwt } from 'utils/session'
 class Header extends React.Component {
   render () {
     if (this.props.loggedIn) {
@@ -11,6 +12,11 @@ class Header extends React.Component {
     } else {
       return <h1> not logged in </h1>
     }
+  }
+
+  logoutAndRedirect () {
+    deleteSessionJwt()
+    return <Redirect to='/' />
   }
 }
 

@@ -4,10 +4,10 @@ import sessionReducer from './sessionReducer'
 // import artistDataReducer from './artistDataReducer'
 
 const rootReducer = combineReducers({
-  constants: (constants={}) => constants,
-  user: (user={}) => user,
+  constants: (constants = {}) => constants,
+  user: (user = {}) => user,
   session: sessionReducer,
-  artistData: (data={}) => data
+  artistData: (data = {}) => data
 })
 
 export default rootReducer

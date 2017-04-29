@@ -1,18 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
 import {connect} from 'react-redux'
+import ArtistList from 'components/common/ArtistCard'
 
 const DashboardPage = props => (
-  <div>Dashboard Page</div>
+  <div>
+    <ArtistList artistData={props.artistData} />
+  </div>
 )
 
 DashboardPage.propTypes = {
-  name: PropTypes.string
+  artistData: PropTypes.object.isRequired
 }
-//TODO: Figure out if the router needs to connect() or every container component does
+// TODO: Figure out if the router needs to connect() or every container component does
 function mapStateToProps (state, ownProps) {
-    return state
+  return state
 }
 
 export default connect(mapStateToProps)(DashboardPage)
