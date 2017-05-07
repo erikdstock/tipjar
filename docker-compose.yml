@@ -1,8 +1,8 @@
 version: '2'
 volumes:
-  groupy-redis:
-  groupy-postgres:
-  groupy-gemcache:
+  tipjar-redis:
+  tipjar-postgres:
+  tipjar-gemcache:
 
 services:
   app:
@@ -14,7 +14,7 @@ services:
       - redis
     volumes:
       - ./src:/src
-      - groupy-gemcache:/usr/local/bundle
+      - tipjar-gemcache:/usr/local/bundle
     ports:
       - '3000:3000'
     env_file:
@@ -34,7 +34,7 @@ services:
       - redis
     volumes:
       - ./src:/src
-      - groupy-gemcache:/usr/local/bundle
+      - tipjar-gemcache:/usr/local/bundle
     env_file:
       - .docker.env
     stdin_open: true
@@ -45,14 +45,14 @@ services:
     ports:
       - '6379'
     volumes:
-      - groupy-redis:/var/lib/redis/data
+      - tipjar-redis:/var/lib/redis/data
 
   postgres:
     image: postgres:9.6.2
     environment:
-      POSTGRES_USER: groupy
+      POSTGRES_USER: tipjar
       POSTGRES_PASSWORD: yourpassword
     ports:
       - '5432'
     volumes:
-      - groupy-postgres:/var/lib/postgresql/data
+      - tipjar-postgres:/var/lib/postgresql/data

@@ -5,6 +5,7 @@ import { Redirect } from 'react-router'
 import { deleteSessionJwt } from 'utils/session'
 
 class Header extends React.Component {
+
   render () {
     let sessionLink
     if (this.props.loggedIn) {
