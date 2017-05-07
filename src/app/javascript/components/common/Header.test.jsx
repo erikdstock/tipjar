@@ -3,7 +3,7 @@ import React from 'react'
 // import ReactTestRenderer from 'react-test-renderer'
 // import sinon from 'sinon'
 // import ReactDOM
-import Header from 'components/common/Header'
+import { Header } from 'components/common/Header'
 import { userFixture } from '__test__/helpers/fixtures'
 
 describe('Header', () => {
