@@ -1,13 +1,21 @@
 version: '2'
 volumes:
-  tipjar-redis:
-  tipjar-postgres:
+  groupy-redis:
+  groupy-postgres:
+  groupy-gemcache:
 
 services:
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    links:
+      - postgres
+      - redis
+    volumes:
+      - groupy-gemcache:/usr/local/bundle
     ports:
-      - '8000:8000'
+      - '3000:3000'
     environment:
       # set these values in CI
       CODECLIMATE_REPO_TOKEN:
@@ -23,22 +31,91 @@ services:
       JOB_WORKER_URL: redis://redis:6379/0
       LISTEN_ON: 0.0.0.0:8000
       DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5432/tipjar?encoding=utf8&pool=5&timeout=5000
-    links:
-      - postgres
-      - redis
 
   sidekiq:
-    build: .
-    command: bundle exec sidekiq -C code/config/sidekiq.yml
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "bundle exec sidekiq -C config/sidekiq.yml"
     links:
       - postgres
       - redis
+    volumes:
+      - groupy-gemcache:/usr/local/bundle
+    environment:
+      # set these values in CI
+      CODECLIMATE_REPO_TOKEN:
+      SECRET_TOKEN:
+      LASTFM_ID:
+      LASTFM_SECRET:
+      WORKER_PROCESSES: 1
+      JWT_SECRET: replace-me
+      SIDEKIQ_USERNAME: admin
+      SIDEKIQ_PASSWORD: password123
+      APP_ROOT: http://127.0.0.1:3000
+      CACHE_URL: redis://redis:6379/0
+      JOB_WORKER_URL: redis://redis:6379/0
+      LISTEN_ON: 0.0.0.0:8000
+      DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5432/tipjar?encoding=utf8&pool=5&timeout=5000
+  
+  redis:
+    image: redis:3.0.5
+    ports:
+      - '6379'
+    volumes:
+      - groupy-redis:/var/lib/redis/data
 
   postgres:
-    image: postgres:9.4.5
+    image: postgres:9.6.2
     environment:
       POSTGRES_USER: tipjar
       POSTGRES_PASSWORD: yourpassword
+    ports:
+      - '5432'
+    volumes:
+      - groupy-postgres:/var/lib/postgresql/data
 
-  redis:
-    image: redis:3.0.5
+# version: '2'
+# volumes:
+#   tipjar-redis:
+#   tipjar-postgres:
+
+# services:
+#   app:
+#     build: .
+#     ports:
+#       - '8000:8000'
+#     environment:
+#       # set these values in CI
+#       CODECLIMATE_REPO_TOKEN:
+#       SECRET_TOKEN:
+#       LASTFM_ID:
+#       LASTFM_SECRET:
+#       WORKER_PROCESSES: 1
+#       JWT_SECRET: replace-me
+#       SIDEKIQ_USERNAME: admin
+#       SIDEKIQ_PASSWORD: password123
+#       APP_ROOT: http://127.0.0.1:3000
+#       CACHE_URL: redis://redis:6379/0
+#       JOB_WORKER_URL: redis://redis:6379/0
+#       LISTEN_ON: 0.0.0.0:8000
+#       DATABASE_URL: postgresql://tipjar:yourpassword@postgres:5432/tipjar?encoding=utf8&pool=5&timeout=5000
+#     links:
+#       - postgres
+#       - redis
+
+#   sidekiq:
+#     build: .
+#     command: bundle exec sidekiq -C code/config/sidekiq.yml
+#     links:
+#       - postgres
+#       - redis
+
+#   postgres:
+#     image: postgres:9.4.5
+#     environment:
+#       POSTGRES_USER: tipjar
+#       POSTGRES_PASSWORD: yourpassword
+
+#   redis:
+#     image: redis:3.0.5
