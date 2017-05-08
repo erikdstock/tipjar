@@ -1,18 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import { Redirect, Link } from 'react-router'
+import { Redirect } from 'react-router'
 import { deleteSessionJwt } from 'utils/session'
 
 class Header extends React.Component {
   render () {
     let sessionLink
-    if (this.props.loggedIn) {
+    if (this.props.isLoggedIn) {
       sessionLink = <a href='#' onClick={this.logoutAndRedirect} >Log Out</a>
     } else {
-      sessionLink = <Link to='/login' >Log In</Link>
+      console.log('in login')
+      sessionLink = <a href='/login' >Log In</a>
     }
-
+    console.log('rendering')
     return (
       <nav>
         { sessionLink }
@@ -36,6 +37,5 @@ function mapStateToProps (state, ownProps) {
   return Object.assign({}, { loggedIn: !!state.session.jwt, user: state.user, constants: state.constants }, ownProps)
 }
 
-export { Header } // for testing
-
 export default connect(mapStateToProps)(Header)
+export { Header } // for testing

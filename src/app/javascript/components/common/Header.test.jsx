@@ -15,6 +15,17 @@ describe('Header', () => {
     // }
   })
 
+  describe('not logged in', () => {
+    beforeEach(() => {
+      props.isLoggedIn = false
+    })
+    it('displays the log in link', () => {
+      console.log(typeof Header)
+      element = <Header {...props} />
+      expect($(element).render().text()).toMatch('Log In')
+    })
+  })
+
   describe('logged in', () => {
     beforeEach(() => {
       props.isLoggedIn = true
@@ -22,15 +33,6 @@ describe('Header', () => {
     it('displays the log out link', () => {
       element = <Header {...props} />
       expect($(element).render().text()).toMatch('Log Out')
-    })
-  })
-  describe('not logged in', () => {
-    beforeEach(() => {
-      props.isLoggedIn = false
-    })
-    it('displays the login link', () => {
-      element = <Header {...props} />
-      expect($(element).render().text()).toMatch('Log In')
     })
   })
 })
