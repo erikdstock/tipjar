@@ -2,12 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import {connect} from 'react-redux'
+import { Button } from 'react-bootstrap'
 // TODO: this stuff should be in constants or state or something?
 
 const LoginPage = props => (
   <div>
     <h1>Log In</h1>
-    <a href={props.lastfmUrl} >Log in with LastFm</a>
+    <Button><a href={props.lastfmUrl} >Log in with LastFm</a></Button>
   </div>
 )
 

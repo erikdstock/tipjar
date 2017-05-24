@@ -11,6 +11,7 @@
     "history": "^4.6.1",
     "prop-types": "^15.5.0",
     "react": "^15.5.4",
+    "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.4",
     "react-router": "^4.1.1",
@@ -44,9 +45,16 @@
     "webpack-merge": "^4.1.0"
   },
   "jest": {
-    "roots": [ "<rootDir>/app/javascript" ],
-    "modulePaths": [ "<rootDir>/app/javascript" ],
-    "moduleFileExtensions": ["js", "jsx"],
+    "roots": [
+      "<rootDir>/app/javascript"
+    ],
+    "modulePaths": [
+      "<rootDir>/app/javascript"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "jsx"
+    ],
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__test__/mocks/fileMock.js",
       "\\.(css|less)$": "<rootDir>/__test__/mocks/styleMock.js"
