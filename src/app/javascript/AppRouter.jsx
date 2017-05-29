@@ -5,6 +5,7 @@ import DashboardPage from './components/DashboardPage'
 import LoginPage from './components/LoginPage'
 import Header from './components/common/Header'
 import { connect } from 'react-redux'
+import { logInSuccess } from 'actions/session'
 
 const AppRouter = (props) => (
   <BrowserRouter
@@ -15,40 +16,53 @@ const AppRouter = (props) => (
   >
     <div>
       <Header />
-      <Route path="/" render={() => (
-        updateLoginCreds(props.jwt) ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
-      )} />
-      <Route path="/login" component={LoginPage}/>
-      <Route path="/dashboard" component={DashboardPage}/>
+      <Route path="/" render={props.refreshLoginJwt(props.jwt)} />
+      <Route path="/dashboard" render={authyRoute(DashboardPage)} />
+      <Route path="/login" component={LoginPage} />
     </div>
   </BrowserRouter>
 )
+      // <PrivateRoute path="/dashboard" render={authyRoute(DashboardPage)}/>
 
 AppRouter.propTypes = {
-  jwt: PropTypes.string
+  jwt: PropTypes.string,
+  refreshLoginJwt: PropTypes.func.isRequired
 }
 
 function mapStateToProps (state, ownProps) {
-  // debugger
-  // setTimeout(() => console.log(state), 50)
   return Object.assign({}, ownProps, { jwt: state.session.jwt })
 }
 
-export default connect(mapStateToProps)(AppRouter)
+const mapDispatchToProps = (dispatch) => {
+  const refreshLoginJwt = (jwt) => {
+    if (jwt) {
+      sessionStorage.jwt = jwt
+    } else if (sessionStorage.jwt) {
+      dispatch(logInSuccess(sessionStorage.jwt))
+    }
+    console.log('session jwt is is set: ' + !!sessionStorage.jwt)
+    return authyRedirect
+  }
+
+  return {
+    refreshLoginJwt
+  }
+}
+
+/* eslint-disable react/display-name */
+const authyRedirect = () => sessionStorage.jwt ? <Redirect to="/dashboard" /> : <Redirect to="/login" />
+const authyRoute = (Component) => () => {
+  console.log('in authyroute')
+  if (sessionStorage.jwt) return <Component />
+  return <Redirect to="/login" />
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter)
 
 // Set session storage to the store's jwt or use an existing one
 // ... TODO: Recognize expired/rejected tokens
-function updateLoginCreds(jwt) {
-  if (jwt) return sessionStorage.jwt = jwt
-  return sessionStorage.jwt
-}
-
-
-
-
 
 /* Private routing example... Delete this someday.
-
 
 function requireAuth (nextState, replace) {
    if (!sessionStorage.jwt) {

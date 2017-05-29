@@ -1,0 +1,25 @@
+add bootstrap as a CSS file, then add this: https://react-bootstrap.github.io/. I’ve used it extensively
+
+then build your app exactly as you’d like to build it, and don’t mess with styling at all
+
+once you’re ready to style, you bring in styled components
+
+since react bootstrap is sitting underneight, you’d be overwriting styles on a need-to basis. But a lot of your style definition is like “how do i create my own theme”
+
+lots of bootstrap “create a theme” utils out there to get your app to where you basically want to go, but in terms of styled components, the main root component container that wraps the app would contain a series of css defintions that overwrite existing bootstrap props to get it exactly how you’d want it.
+
+i guess thats what i’d do
+
+but step one is to get bootstrap css file in and add `react-bootstrap` lib
+
+and i would suggest using this https://github.com/facebookincubator/create-react-app
+
+well root component overwrites default bootstrap styles on a need to basis. maybe you don’t need to even adjust it. but if you did, that’s where you’d do it.
+
+you have a package.json script `css:build`, also `css:watch`. When you run those command it will recompile your bootstrap css. That way you can tweak variables that bootstrap provides
+
+in both of those commands it simply calls `sass <bootstrap entrypoint file>` or `less <file>`
+
+tweaking those things will get you there
+don’t worry about styled components until your actual bootstrap file is how you’d like it to be
+but don’t worry about that UNTIL you’ve started laying out your app, and everything works as a basic, typical bootstrap thing using react-components.

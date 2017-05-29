@@ -8,7 +8,7 @@ import { Button } from 'react-bootstrap'
 const LoginPage = props => (
   <div>
     <h1>Log In</h1>
-    <Button><a href={props.lastfmUrl} >Log in with LastFm</a></Button>
+    <Button href={props.lastfmUrl}>Log in with LastFm</Button>
   </div>
 )
 
