@@ -10,4 +10,3 @@ export const logoutSession = () => {
   console.log('logging out of session')
   delete sessionStorage.jwt
 }
-

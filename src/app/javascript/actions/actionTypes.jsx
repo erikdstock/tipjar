@@ -1,2 +1,3 @@
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS'
 export const LOG_OUT = 'LOG_OUT'
+export const FETCH_ARTISTS_SUCCESS = 'FETCH_ARTISTS_SUCCESS'

@@ -1,13 +1,14 @@
 import { combineReducers } from 'redux'
-import sessionReducer from './sessionReducer'
+import artistDataReducer from 'reducers/artistDataReducer'
+import sessionReducer from 'reducers/sessionReducer'
+import initialState from 'reducers/initialState'
 // import userReducer from './userReducer'
-// import artistDataReducer from './artistDataReducer'
 
 const rootReducer = combineReducers({
   constants: (constants = {}) => constants,
-  user: (user = {}) => user,
+  user: (user = initialState.user) => user,
   session: sessionReducer,
-  artistData: (data = {}) => data
+  artistData: artistDataReducer
 })
 
 export default rootReducer

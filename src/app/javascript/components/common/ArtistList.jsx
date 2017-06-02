@@ -4,6 +4,7 @@ import ArtistCard from 'components/common/ArtistCard'
 
 const ArtistList = props => {
   const {artistData} = props
+  console.log('*****', artistData)
   return (
     <div>
       <h2>Artists of the Month</h2>

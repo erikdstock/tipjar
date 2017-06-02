@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
           month: format_month_year(month),
           artists: formatted_artists
         }]
-      initial_data = { session: {jwt: current_user.jwt}, user: current_user.as_json, artistData: { topArtists: top_artists } }
+      initial_data = { session: {jwt: current_user.jwt}, user: current_user.as_json, artistData: { artists: top_artists } }
     else
       initial_data = {}
     end
