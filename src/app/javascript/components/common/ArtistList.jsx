@@ -4,11 +4,11 @@ import ArtistCard from 'components/common/ArtistCard'
 
 const ArtistList = props => {
   const {artistData} = props
-  console.log('*****', artistData)
+  const artists = artistData.artists || []
   return (
     <div>
       <h2>Artists of the Month</h2>
-      {artistData.artists.map((artist) => <ArtistCard name={artist.name} />)}
+      {artists.map((artist) => <ArtistCard name={artist.name} />)}
     </div>
   )
 }
