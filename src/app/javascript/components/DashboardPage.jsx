@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import ArtistList from 'components/common/ArtistList'
 import DashboardToolbar from 'components/dashboard/DashboardToolbar'
-import {fetchArtists} from 'actions/artistData'
+import { fetchArtists } from 'actions/artistData'
 
 class DashboardPage extends React.Component {
   render () {
@@ -16,33 +16,36 @@ class DashboardPage extends React.Component {
   }
 
   componentWillMount () {
-    if (!this.props.artistData.artists) this.props.refreshArtists()
+    if (!this.props.artistData.artists) this.refreshArtists()
+  }
+
+  refreshArtists () {
+    console.log('need artists') // eslint-disable-line
+    this.props.dispatch(fetchArtists({ jwt: this.props.session.jwt }))
   }
 }
 
 DashboardPage.propTypes = {
+  session: PropTypes.object.isRequired,
   artistData: PropTypes.object.isRequired,
-  refreshArtists: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired
 }
 
 function mapStateToProps (state, ownProps) {
   return state
-  // if (!state.artistData.artists) {
-  //   return Object.assign({}, state, {artists: []})
-  // } else {
-  //   return Object.assign({}, state, {artists: state.artistData.artists})
-  // }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  const refreshArtists = () => {
-    console.log('need artists')
-    dispatch(fetchArtists())
-  }
+// // alternative is to NOT use mapDispatchToProps, in which case dispatch() will be passed in as a prop
+// // automatically
+// const mapDispatchToProps = (dispatch) => {
+//   const refreshArtists = () => {
+//     console.log('need artists')
+//     dispatch(fetchArtists()) 
+//   }
 
-  return {
-    refreshArtists
-  }
-}
+//   return {
+//     refreshArtists
+//   }
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage)
+export default connect(mapStateToProps/*, mapDispatchToProps */)(DashboardPage)

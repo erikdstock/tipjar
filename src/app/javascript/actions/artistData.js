@@ -1,15 +1,30 @@
-import { FETCH_ARTISTS_SUCCESS } from 'actions/actionTypes'
+import { getApi } from 'utils/api'
 
-export const fetchArtists = () => {
-  console.log('fetching artists...')
-  return (dispatch) => {
-    dispatch(fetchArtistsSuccess([{name: 'Barry'}]))
-  }
+// Actions
+import { FETCH_ARTISTS_SUCCESS, FETCH_ARTISTS_FAILURE } from 'actions/actionTypes'
+
+// Action Creators
+
+export const fetchArtists = ({jwt}) => {
+  console.log('fetching artists...') // eslint-disable-line
+  return (dispatch) => (
+    getApi('/my_artists', jwt)
+      .then(fetchArtistsSuccess)
+      .catch(fetchArtistsFailure)
+  )
 }
 
-export const fetchArtistsSuccess = (artists) => (
+const fetchArtistsSuccess = (data) => (
   {
     type: FETCH_ARTISTS_SUCCESS,
-    artists
+    payload: data
+  }
+)
+
+const fetchArtistsFailure = (err) => (
+  {
+    type: FETCH_ARTISTS_FAILURE,
+    payload: err,
+    error: true
   }
 )

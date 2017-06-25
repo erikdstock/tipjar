@@ -49,6 +49,12 @@ const config = {
       }
     ]
   },
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
 
   plugins: [
     new webpack.EnvironmentPlugin(Object.keys(process.env))
