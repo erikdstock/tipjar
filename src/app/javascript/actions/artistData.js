@@ -6,9 +6,10 @@ import { FETCH_ARTISTS_SUCCESS, FETCH_ARTISTS_FAILURE } from 'actions/actionType
 // Action Creators
 
 export const fetchArtists = ({jwt}) => {
-  console.log('fetching artists...') // eslint-disable-line
+  console.log('feltching artists...') // eslint-disable-line
+  debugger
   return (dispatch) => (
-    getApi('/my_artists', jwt)
+    getApi('/my_top_artists', jwt)
       .then(fetchArtistsSuccess)
       .catch(fetchArtistsFailure)
   )

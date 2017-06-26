@@ -1,7 +1,7 @@
 import rp from 'request-promise'
 
 export const getApi = (endpoint, jwt) => {
-  console.log()
+  // console.log()
   return rp(authenticatedOptions(endpoint, {jwt}))
 }
 
@@ -15,7 +15,3 @@ const authenticatedOptions = (endpoint, {jwt}) => (
     json: true // Automatically parses the JSON string in the response
   }
 )
-
-export const getArtists = (opts={}) => {
-  rp.get
-}

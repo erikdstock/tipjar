@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     registrations: 'users/registrations',
     sessions: 'users/sessions',
     omniauth_callbacks: 'users/omniauth_callbacks' #TODO: a long-term approach to user sessions [prob dont need devise]
-    }
+  }
 
   devise_scope :user do
     get 'logout', to: 'users/sessions#destroy'
@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     get '/', to: 'root#main', as: :root
     get '/me', to: 'root#me'
     get '/req', to: 'root#req'
+    get '/my_top_artists', to: 'root#my_top_artists'
   end
 
   require 'sidekiq/web'
