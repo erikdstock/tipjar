@@ -1,13 +1,16 @@
 class Api::RootController < ApplicationController
-  before_action :authenticate_user!
+  include Concerns::AuthHelpers
+  before_action :authenticate
 
   def index
     render json: { 'api status' => :cool }
   end
 
   def my_top_artists
+    p "************************** Docker host ip is wrong?"
+    p ENV['DOCKER_HOST_IP']
     month = params[:date] || 1.month.ago
-    payload = current_user_top_artist_data(month)
+    payload = user_top_artist_data(month)
     p payload
     render json: payload
   end
@@ -24,9 +27,7 @@ class Api::RootController < ApplicationController
   private
 
   def authenticate
-    p "************************"
-    p current_user
-    unless user_signed_in?
+    unless current_user
       payload = { error: 'You are not signed in' }
       render  status: :unauthorized, json: payload
     end
