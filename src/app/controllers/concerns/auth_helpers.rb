@@ -14,7 +14,7 @@ module Concerns
       p 'finding user...'
       return nil unless jwt
       p jwt
-      p @_current_user = User.find_by(jti: jwt)
+      p @_current_user = User.find_by(jti: jwt) # hmm actually need to parse jti from jwt!
     end
 
     def jwt

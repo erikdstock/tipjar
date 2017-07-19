@@ -1,6 +1,6 @@
 class Api::RootController < ApplicationController
-  include Concerns::AuthHelpers
-  before_action :authenticate
+  # include Concerns::AuthHelpers
+  before_action :authenticate_user!
 
   def index
     render json: { 'api status' => :cool }
@@ -26,7 +26,8 @@ class Api::RootController < ApplicationController
 
   private
 
-  def authenticate
+  def authenticate_user!
+    byebug
     unless current_user
       payload = { error: 'You are not signed in' }
       render  status: :unauthorized, json: payload

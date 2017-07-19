@@ -6,6 +6,7 @@ Devise.setup do |config|
     # When to send a jwt auth header back w/ response
     jwt.dispatch_requests = [
       ['GET', %r{^/dashboard$}],
+      ['GET', %r{^/users/auth/}],
       ['GET', %r{^/api/me$}]
     ]
   end

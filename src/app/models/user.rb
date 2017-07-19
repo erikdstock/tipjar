@@ -8,22 +8,24 @@ class User < ApplicationRecord
   after_create :queue_initial_refresh
 
   include Devise::JWT::RevocationStrategies::JTIMatcher
-  devise :database_authenticatable, # hashes and stores a password in the database to validate user
-         :jwt_authenticatable,      # Auth via jwt
-         :omniauthable,             # omniauth.
-         :recoverable,              # Password reset
-         :registerable,             # handles signing up users through a registration process
-         :trackable,                # tracks sign in count, timestamps and IP address.
-         :validatable,              # provides validations of email and password.
-         omniauth_providers: [:lastfm],
-         jwt_revocation_strategy: self # Strategy for revoking jwts exists on user model
-  #  :rememberable,             # manages generating and clearing a token for remembering the user from cookie
-  # :confirmable,            # sends emails with confirmation instructions and verifies an account is confirmed
-  # :lockable,               # lock account after failed signin attempts
-  # :timeoutable,            # expires sessions that have not been active in a specified period of time.
+  devise(
+    :jwt_authenticatable,      # Auth via jwt
+    :omniauthable,             # omniauth.
+    :trackable,                # tracks sign in count, timestamps and IP address.
+    # :database_authenticatable, # hashes and stores a password in the database to validate user
+    # :recoverable,              # Password reset
+    # :registerable,             # handles signing up users through a registration process
+    # :validatable,              # provides validations of email and password.
+    omniauth_providers: [:lastfm],
+    jwt_revocation_strategy: self # Strategy for revoking jwts exists on user model
+    # :rememberable,             # manages generating and clearing a token for remembering the user from cookie
+    # :confirmable,            # sends emails with confirmation instructions and verifies an account is confirmed
+    # :lockable,               # lock account after failed signin attempts
+    # :timeoutable,            # expires sessions that have not been active in a specified period of time.
+  )
 
   def jwt
-    Warden::JWTAuth::UserEncoder.new.call(self, {})
+    Warden::JWTAuth::UserEncoder.new.call(self, :user) # TODO: is this needed (used to set session jwt in __INITIAL_DATA__)? it should come through on headers
   end
 
   # Get top artists for month
